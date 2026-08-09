@@ -1,0 +1,30 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.py[cod]
+.venv/
+env/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Scratch & Temporary files
+scratch/
+tmp/
+*.tmp

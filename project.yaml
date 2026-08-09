@@ -1,0 +1,20 @@
+name: "agentic-sdlc-template"
+version: "0.1.0"
+description: "Governance-first Agentic SDLC project template"
+governance:
+  enforce_human_approval: true
+  traceability_required: true
+  phase_gates_strict: true
+phases:
+  - id: "00-project-definition"
+    handoff: "docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json"
+  - id: "01-analysis"
+    handoff: "docs/01-analysis/ANALYSIS_HANDOFF.json"
+  - id: "02-design"
+    handoff: "docs/02-design/DESIGN_HANDOFF.json"
+  - id: "03-implementation"
+    handoff: "docs/03-implementation/BUILD_HANDOFF.json"
+  - id: "04-test"
+    handoff: "docs/04-test/VERIFY_HANDOFF.json"
+  - id: "05-release"
+    handoff: "docs/05-release/RELEASE_HANDOFF.json"
