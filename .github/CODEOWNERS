@@ -1,2 +1,17 @@
-# Default code owners
-* @nicepdg71
+# ==================================================
+# Agentic SDLC CODEOWNERS Template
+# ==================================================
+#
+# 신규 프로젝트 생성 시 실제 GitHub User/Team으로
+# 아래 placeholder를 반드시 교체한다.
+#
+# Example:
+#
+# *                       @your-org/dev-team
+# /.agents/               @your-org/platform-team
+# /.github/               @your-org/platform-team
+# /docs/approvals/        @your-org/project-approvers
+# /infra/                 @your-org/devops-team
+# /contracts/             @your-org/architecture-team
+#
+# 특히 CODEOWNERS 자체도 보호 대상으로 설정할 것.

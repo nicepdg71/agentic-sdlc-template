@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+
+  "title": "Agentic SDLC Stage Handoff",
+
+  "type": "object",
+
+  "required": [
+    "handoff_version",
+    "project_id",
+    "stage",
+    "status",
+    "inputs",
+    "outputs",
+    "validation",
+    "approval",
+    "next_stage",
+    "next_workflow"
+  ],
+
+  "properties": {
+    "status": {
+      "enum": [
+        "DRAFT",
+        "READY",
+        "READY_FOR_APPROVAL",
+        "APPROVED",
+        "BLOCKED",
+        "SUPERSEDED"
+      ]
+    },
+
+    "stage": {
+      "enum": [
+        "DEFINE",
+        "SPEC",
+        "DESIGN",
+        "BUILD",
+        "VERIFY",
+        "RELEASE"
+      ]
+    },
+
+    "inputs": {
+      "type": "array"
+    },
+
+    "outputs": {
+      "type": "array"
+    },
+
+    "validation": {
+      "type": "object"
+    },
+
+    "approval": {
+      "type": "object"
+    }
+  }
+}

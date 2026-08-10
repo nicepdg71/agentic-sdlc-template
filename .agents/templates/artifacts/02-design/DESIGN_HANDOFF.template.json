@@ -1,0 +1,82 @@
+{
+  "handoff_version": "1.0",
+  "project_id": "<PROJECT-ID>",
+  "stage": "DESIGN",
+  "status": "DRAFT",
+  "artifact_version": "0.1",
+  "inputs": [
+    {
+      "artifact_id": "<REQ-BASELINE-ID>",
+      "path": "docs/01-analysis/REQUIREMENTS.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<ACSET-ID>",
+      "path": "docs/01-analysis/ACCEPTANCE_CRITERIA.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<TRACE-ID>",
+      "path": "docs/01-analysis/TRACEABILITY_MATRIX.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<ANALYSIS-HANDOFF-ID>",
+      "path": "docs/01-analysis/ANALYSIS_HANDOFF.json",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_id": "<ARCH-ID>",
+      "path": "docs/02-design/ARCHITECTURE.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<DESIGN-ID>",
+      "path": "docs/02-design/DESIGN.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<DATA-ID>",
+      "path": "docs/02-design/DATA_MODEL.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<SEC-DESIGN-ID>",
+      "path": "docs/02-design/SECURITY_DESIGN.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<ADR-SET-ID>",
+      "path": "docs/02-design/adr/",
+      "version": "0.1",
+      "status": "DRAFT"
+    }
+  ],
+  "decisions": [],
+  "risks": [],
+  "open_questions": [],
+  "traceability": [],
+  "validation": {
+    "result": "NOT_EXECUTED",
+    "issues": []
+  },
+  "approval": {
+    "gate": "G2",
+    "decision": "PENDING",
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
+  },
+  "next_stage": "BUILD",
+  "next_workflow": "/plan-implementation"
+}

@@ -1,0 +1,39 @@
+{
+  "handoff_version": "1.0",
+  "project_id": "<PROJECT-ID>",
+  "stage": "DEFINE",
+  "status": "DRAFT",
+  "artifact_version": "0.1",
+  "inputs": [],
+  "outputs": [
+    {
+      "artifact_id": "<PCHAR-ID>",
+      "path": "docs/00-project-definition/PROJECT_CHARTER.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<SCOPE-ID>",
+      "path": "docs/00-project-definition/SCOPE.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    }
+  ],
+  "decisions": [],
+  "risks": [],
+  "open_questions": [],
+  "traceability": [],
+  "validation": {
+    "result": "NOT_EXECUTED",
+    "issues": []
+  },
+  "approval": {
+    "gate": "G0",
+    "decision": "PENDING",
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
+  },
+  "next_stage": "SPEC",
+  "next_workflow": "/analyze-requirements"
+}

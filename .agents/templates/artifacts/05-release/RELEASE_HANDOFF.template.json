@@ -1,0 +1,73 @@
+{
+  "handoff_version": "1.0",
+  "project_id": "<PROJECT-ID>",
+  "stage": "RELEASE",
+  "status": "DRAFT",
+  "artifact_version": "0.1",
+  "inputs": [
+    {
+      "artifact_id": "<VERIFY-HANDOFF-ID>",
+      "path": "docs/04-test/VERIFY_HANDOFF.json",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<TESTREP-ID>",
+      "path": "docs/04-test/TEST_REPORT.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<SECREP-ID>",
+      "path": "docs/04-test/SECURITY_REPORT.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_id": "<RELPLAN-ID>",
+      "path": "docs/05-release/RELEASE_PLAN.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<RELCHK-ID>",
+      "path": "docs/05-release/RELEASE_CHECKLIST.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<RELNOTE-ID>",
+      "path": "docs/05-release/RELEASE_NOTES.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<ROLLBACK-ID>",
+      "path": "docs/05-release/ROLLBACK_PLAN.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    }
+  ],
+  "decisions": [],
+  "risks": [],
+  "open_questions": [],
+  "traceability": [],
+  "validation": {
+    "result": "NOT_EXECUTED",
+    "deployment_status": "NOT_EXECUTED",
+    "smoke_test": "NOT_EXECUTED",
+    "monitoring": "NOT_CHECKED",
+    "issues": []
+  },
+  "approval": {
+    "gate": "G5",
+    "decision": "PENDING",
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
+  },
+  "next_stage": "MAINTENANCE",
+  "next_workflow": "COMPLETE"
+}

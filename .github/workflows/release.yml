@@ -1,16 +1,79 @@
-name: Release
+name: Production Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+
+      release_version:
+        description: "G5 approved release version"
+        required: true
+        type: string
+
+      release_commit:
+        description: "G5 approved Git commit SHA"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production
+  cancel-in-progress: false
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Publish Release
-        run: echo "Creating release..."
+  production-release:
+
+    name: production-release
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+
+      - name: Checkout approval evidence
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: evidence
+
+      - name: Validate G5 approval
+        run: |
+          python evidence/.github/scripts/validate_release_gate.py \
+            --version "${{ inputs.release_version }}" \
+            --commit "${{ inputs.release_commit }}"
+
+      - name: Checkout approved release candidate
+        uses: actions/checkout@v4
+        with:
+          ref: "${{ inputs.release_commit }}"
+          persist-credentials: false
+          path: application
+
+      - name: Verify candidate commit
+        shell: bash
+        run: |
+          cd application
+
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          EXPECTED_SHA="${{ inputs.release_commit }}"
+
+          if [[ "${ACTUAL_SHA}" != "${EXPECTED_SHA}" ]]; then
+            echo "::error::Release candidate SHA mismatch."
+            exit 1
+          fi
+
+      - name: Deploy production
+        shell: bash
+        run: |
+          cd application
+          bash scripts/deploy-production.sh
+
+      - name: Production smoke test
+        shell: bash
+        run: |
+          cd application
+          bash scripts/smoke-test.sh production

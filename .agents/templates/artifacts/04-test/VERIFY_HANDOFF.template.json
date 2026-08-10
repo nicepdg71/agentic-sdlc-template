@@ -1,0 +1,78 @@
+{
+  "handoff_version": "1.0",
+  "project_id": "<PROJECT-ID>",
+  "stage": "VERIFY",
+  "status": "DRAFT",
+  "artifact_version": "0.1",
+  "inputs": [
+    {
+      "artifact_id": "<BUILD-HANDOFF-ID>",
+      "path": "docs/03-implementation/BUILD_HANDOFF.json",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<REQ-BASELINE-ID>",
+      "path": "docs/01-analysis/REQUIREMENTS.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<ACSET-ID>",
+      "path": "docs/01-analysis/ACCEPTANCE_CRITERIA.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<TRACE-ID>",
+      "path": "docs/01-analysis/TRACEABILITY_MATRIX.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_id": "<TESTPLAN-ID>",
+      "path": "docs/04-test/TEST_PLAN.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<TESTCASE-SET-ID>",
+      "path": "docs/04-test/TEST_CASES.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<TESTREP-ID>",
+      "path": "docs/04-test/TEST_REPORT.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<SECREP-ID>",
+      "path": "docs/04-test/SECURITY_REPORT.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    }
+  ],
+  "decisions": [],
+  "risks": [],
+  "open_questions": [],
+  "traceability": [],
+  "validation": {
+    "result": "NOT_EXECUTED",
+    "critical_ac_pass": "NOT_EXECUTED",
+    "security_scan_pass": "NOT_EXECUTED",
+    "issues": []
+  },
+  "approval": {
+    "gate": "G4",
+    "decision": "PENDING",
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
+  },
+  "next_stage": "RELEASE",
+  "next_workflow": "/prepare-release"
+}

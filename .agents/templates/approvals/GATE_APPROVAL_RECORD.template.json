@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+
+  "project_id": "<PROJECT-ID>",
+
+  "gate": "<G0-G5>",
+
+  "gate_name": "<GATE-NAME>",
+
+  "stage": "<STAGE>",
+
+  "review_package": {
+    "id": "<REVIEW-PACKAGE-ID>",
+    "path": "<PATH>"
+  },
+
+  "decision": "PENDING",
+
+  "decision_scope": {
+    "artifacts": [
+      {
+        "artifact_id": "<ARTIFACT-ID>",
+        "path": "<PATH>",
+        "version": "<VERSION>"
+      }
+    ],
+
+    "release_candidate": {
+      "version": "",
+      "commit": ""
+    }
+  },
+
+  "validation": {
+    "result": "PASS",
+    "blocking_issues": []
+  },
+
+  "risks": [],
+
+  "open_questions": [],
+
+  "comments": [],
+
+  "decided_by": "",
+
+  "decided_at": "",
+
+  "next_stage": "<NEXT-STAGE>",
+
+  "next_workflow": "<NEXT-WORKFLOW>"
+}

@@ -1,0 +1,43 @@
+name: Staging Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging
+  cancel-in-progress: false
+
+jobs:
+
+  deploy-staging:
+
+    if: ${{ vars.STAGING_DEPLOY_ENABLED == 'true' }}
+
+    name: deploy-staging
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: staging
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Deploy to staging
+        shell: bash
+        run: |
+          bash scripts/deploy-staging.sh
+
+      - name: Smoke test
+        shell: bash
+        run: |
+          bash scripts/smoke-test.sh staging

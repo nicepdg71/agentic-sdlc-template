@@ -1,5 +1,5 @@
 name: "agentic-sdlc-template"
-version: "0.1.0"
+version: "1.0.0"
 description: "Governance-first Agentic SDLC project template"
 governance:
   enforce_human_approval: true

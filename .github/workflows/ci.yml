@@ -1,20 +1,40 @@
-name: CI
+name: Agentic SDLC CI
 
 on:
-  push:
-    branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ]
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-test:
+
+  ci-gate:
+    name: ci-gate
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Run Lint and Quality Checks
-        run: echo "Running lint..."
+      - name: Validate Agentic SDLC structure
+        run: |
+          python .github/scripts/validate_agentic_sdlc.py
 
-      - name: Run Tests
-        run: echo "Running test suite..."
+      - name: Run project CI
+        shell: bash
+        run: |
+          bash scripts/ci.sh

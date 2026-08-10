@@ -1,0 +1,70 @@
+{
+  "handoff_version": "1.0",
+  "project_id": "<PROJECT-ID>",
+  "stage": "SPEC",
+  "status": "DRAFT",
+  "artifact_version": "0.1",
+  "inputs": [
+    {
+      "artifact_id": "<PCHAR-ID>",
+      "path": "docs/00-project-definition/PROJECT_CHARTER.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<SCOPE-ID>",
+      "path": "docs/00-project-definition/SCOPE.md",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    },
+    {
+      "artifact_id": "<PDEF-HANDOFF-ID>",
+      "path": "docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json",
+      "version": "<VERSION>",
+      "status": "APPROVED"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_id": "<REQ-BASELINE-ID>",
+      "path": "docs/01-analysis/REQUIREMENTS.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<USER-STORY-SET-ID>",
+      "path": "docs/01-analysis/USER_STORIES.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<ACSET-ID>",
+      "path": "docs/01-analysis/ACCEPTANCE_CRITERIA.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    },
+    {
+      "artifact_id": "<TRACE-ID>",
+      "path": "docs/01-analysis/TRACEABILITY_MATRIX.md",
+      "version": "0.1",
+      "status": "DRAFT"
+    }
+  ],
+  "decisions": [],
+  "risks": [],
+  "open_questions": [],
+  "traceability": [],
+  "validation": {
+    "result": "NOT_EXECUTED",
+    "issues": []
+  },
+  "approval": {
+    "gate": "G1",
+    "decision": "PENDING",
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
+  },
+  "next_stage": "DESIGN",
+  "next_workflow": "/design-system"
+}
