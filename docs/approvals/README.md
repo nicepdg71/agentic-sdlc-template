@@ -1,41 +1,39 @@
-# Human Approval Records
+# Gate Approval Records Repository
 
-이 디렉터리는 Agentic SDLC의
-Human Approval Evidence를 저장한다.
+This directory archives all formal human sign-offs, review packages, and approval records across project lifecycles.
 
-## Standard Gate Files
+## Directory Structure
 
-G0:
-G0-project-definition.review.md
-G0-project-definition.approval.json
+In v1.1, approvals are organized per execution cycle to preserve full audit history without overwriting previous decisions:
 
-G1:
-G1-requirement-baseline.review.md
-G1-requirement-baseline.approval.json
+```
+docs/approvals/
+│
+├── INIT-001/                                      # Initial SDLC Lifecycle
+│   ├── G0-project-definition.approval.json
+│   ├── G0-project-definition.review.md
+│   ├── G1-requirement-baseline.approval.json
+│   ├── G1-requirement-baseline.review.md
+│   ├── G2-design-baseline.approval.json
+│   ├── G2-design-baseline.review.md
+│   ├── G3-implementation-plan.approval.json
+│   ├── G3-implementation-plan.review.md
+│   ├── G4-release-candidate.approval.json
+│   ├── G4-release-candidate.review.md
+│   ├── G5-production-release.approval.json
+│   └── G5-production-release.review.md
+│
+├── CR-0001/                                       # First Change Request Cycle
+│   ├── G1-requirement-baseline.approval.json      # Re-approved Gates
+│   ├── G2-design-baseline.approval.json
+│   ├── G3-implementation-plan.approval.json
+│   ├── G4-release-candidate.approval.json
+│   └── G5-production-release.approval.json
+│
+└── CR-XXXX/                                       # Subsequent Change Cycles
+```
 
-G2:
-G2-design-baseline.review.md
-G2-design-baseline.approval.json
-
-G3:
-G3-implementation-plan.review.md
-G3-implementation-plan.approval.json
-
-G4:
-G4-release-candidate.review.md
-G4-release-candidate.approval.json
-
-G5:
-G5-production-release.review.md
-G5-production-release.approval.json
-
-## Principle
-
-Approval은 대화에만 존재해서는 안 된다.
-
-승인 대상 Artifact의 정확한 Version을 기록한다.
-
-승인된 Artifact가 변경되면
-기존 Approval은 새 Version에 적용되지 않는다.
-
-Human Approval은 다음 Workflow를 자동 실행하지 않는다.
+## Approval Preservation Rules
+1. **Never Overwrite**: Past approval records are permanently retained in their respective cycle folder.
+2. **Upstream Retention**: Unaffected upstream approvals (e.g. G0 during a SPEC change) remain valid in their original cycle folder.
+3. **Downstream Re-approval**: All gates from the Earliest Impacted Stage to G5 must be re-approved in the active `CR-XXXX` cycle folder.

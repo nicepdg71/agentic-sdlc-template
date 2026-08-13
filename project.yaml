@@ -1,10 +1,18 @@
 name: "agentic-sdlc-template"
-version: "1.0.0"
-description: "Governance-first Agentic SDLC project template"
+version: "1.1.0"
+description: "Governance-first Agentic SDLC project template v1.1"
 governance:
   enforce_human_approval: true
   traceability_required: true
   phase_gates_strict: true
+toolchain:
+  ui_design:
+    policy: suggest_when_applicable
+    enabled: false
+    preferred_tool: stitch
+    selected_tool: TBD
+    integration: mcp
+    stitch_project_ref: ""
 phases:
   - id: "00-project-definition"
     handoff: "docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json"

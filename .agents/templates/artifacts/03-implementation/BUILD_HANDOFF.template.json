@@ -1,16 +1,12 @@
 {
-  "handoff_version": "1.0",
+  "handoff_version": "1.1.0",
   "project_id": "<PROJECT-ID>",
+  "cycle_id": "<CYCLE_ID>",
+  "change_id": "<CHANGE_ID_OR_NULL>",
   "stage": "BUILD",
   "status": "DRAFT",
   "artifact_version": "0.1",
   "inputs": [
-    {
-      "artifact_id": "<IMPL-ID>",
-      "path": "docs/03-implementation/IMPLEMENTATION_PLAN.md",
-      "version": "<VERSION>",
-      "status": "APPROVED"
-    },
     {
       "artifact_id": "<DESIGN-HANDOFF-ID>",
       "path": "docs/02-design/DESIGN_HANDOFF.json",
@@ -18,36 +14,20 @@
       "status": "APPROVED"
     },
     {
-      "artifact_id": "<REQ-BASELINE-ID>",
-      "path": "docs/01-analysis/REQUIREMENTS.md",
-      "version": "<VERSION>",
-      "status": "APPROVED"
-    },
-    {
-      "artifact_id": "<ACSET-ID>",
-      "path": "docs/01-analysis/ACCEPTANCE_CRITERIA.md",
+      "artifact_id": "IMPL-PLAN-001",
+      "path": "docs/03-implementation/IMPLEMENTATION_PLAN.md",
       "version": "<VERSION>",
       "status": "APPROVED"
     }
   ],
   "outputs": [
     {
-      "artifact_id": "<SOURCE-CODE-SET>",
-      "path": "src/",
-      "version": "<COMMIT-HASH>",
-      "status": "DRAFT"
+      "type": "source_code",
+      "commit": "<COMMIT-SHA>"
     },
     {
-      "artifact_id": "<UNIT-TEST-SET>",
-      "path": "tests/unit/",
-      "version": "<COMMIT-HASH>",
-      "status": "DRAFT"
-    },
-    {
-      "artifact_id": "<CHANGELOG-WORKING>",
-      "path": "docs/03-implementation/CHANGELOG_WORKING.md",
-      "version": "0.1",
-      "status": "DRAFT"
+      "type": "unit_tests",
+      "result": "PASS"
     }
   ],
   "decisions": [],
@@ -55,7 +35,6 @@
   "open_questions": [],
   "traceability": [],
   "validation": {
-    "result": "NOT_EXECUTED",
     "lint": "NOT_EXECUTED",
     "unit_test": "NOT_EXECUTED",
     "build": "NOT_EXECUTED",
@@ -64,9 +43,9 @@
   "approval": {
     "gate": "G3",
     "decision": "APPROVED",
-    "approved_by": "<G3-APPROVER>",
-    "approved_at": "<ISO-8601>",
-    "comments": "Implementation Plan Approved; Build Handoff verified by engineer"
+    "approved_by": "",
+    "approved_at": "",
+    "comments": ""
   },
   "next_stage": "VERIFY",
   "next_workflow": "/verify-release-candidate"

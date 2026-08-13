@@ -1,13 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-
   "title": "Agentic SDLC Stage Handoff",
-
   "type": "object",
 
   "required": [
     "handoff_version",
     "project_id",
+    "cycle_id",
     "stage",
     "status",
     "inputs",
@@ -19,6 +18,24 @@
   ],
 
   "properties": {
+    "handoff_version": {
+      "type": "string"
+    },
+
+    "project_id": {
+      "type": "string"
+    },
+
+    "cycle_id": {
+      "type": "string",
+      "description": "Cycle identifier, e.g. INIT-001 or CR-0001"
+    },
+
+    "change_id": {
+      "type": ["string", "null"],
+      "description": "Change Request identifier if applicable, or null for initial cycle"
+    },
+
     "status": {
       "enum": [
         "DRAFT",
@@ -26,6 +43,7 @@
         "READY_FOR_APPROVAL",
         "APPROVED",
         "BLOCKED",
+        "STALE",
         "SUPERSEDED"
       ]
     },
@@ -55,6 +73,14 @@
 
     "approval": {
       "type": "object"
+    },
+
+    "next_stage": {
+      "type": ["string", "null"]
+    },
+
+    "next_workflow": {
+      "type": ["string", "null"]
     }
   }
 }

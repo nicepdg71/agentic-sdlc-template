@@ -1,6 +1,8 @@
 {
-  "handoff_version": "1.0",
+  "handoff_version": "1.1.0",
   "project_id": "<PROJECT-ID>",
+  "cycle_id": "<CYCLE_ID>",
+  "change_id": "<CHANGE_ID_OR_NULL>",
   "stage": "VERIFY",
   "status": "DRAFT",
   "artifact_version": "0.1",
@@ -9,61 +11,46 @@
       "artifact_id": "<BUILD-HANDOFF-ID>",
       "path": "docs/03-implementation/BUILD_HANDOFF.json",
       "version": "<VERSION>",
-      "status": "APPROVED"
-    },
-    {
-      "artifact_id": "<REQ-BASELINE-ID>",
-      "path": "docs/01-analysis/REQUIREMENTS.md",
-      "version": "<VERSION>",
-      "status": "APPROVED"
-    },
-    {
-      "artifact_id": "<ACSET-ID>",
-      "path": "docs/01-analysis/ACCEPTANCE_CRITERIA.md",
-      "version": "<VERSION>",
-      "status": "APPROVED"
-    },
-    {
-      "artifact_id": "<TRACE-ID>",
-      "path": "docs/01-analysis/TRACEABILITY_MATRIX.md",
-      "version": "<VERSION>",
-      "status": "APPROVED"
+      "status": "READY"
     }
   ],
   "outputs": [
     {
-      "artifact_id": "<TESTPLAN-ID>",
+      "artifact_id": "TEST-PLAN-001",
       "path": "docs/04-test/TEST_PLAN.md",
       "version": "0.1",
       "status": "DRAFT"
     },
     {
-      "artifact_id": "<TESTCASE-SET-ID>",
+      "artifact_id": "TEST-CASES-001",
       "path": "docs/04-test/TEST_CASES.md",
       "version": "0.1",
       "status": "DRAFT"
     },
     {
-      "artifact_id": "<TESTREP-ID>",
+      "artifact_id": "TEST-REPORT-001",
       "path": "docs/04-test/TEST_REPORT.md",
       "version": "0.1",
       "status": "DRAFT"
     },
     {
-      "artifact_id": "<SECREP-ID>",
+      "artifact_id": "SEC-REPORT-001",
       "path": "docs/04-test/SECURITY_REPORT.md",
       "version": "0.1",
       "status": "DRAFT"
     }
   ],
+  "ui_verification": {
+    "artifact_id": "UI-VERIFY-001",
+    "path": "docs/04-test/UI_VERIFICATION_REPORT.md",
+    "result": "NOT_EXECUTED"
+  },
   "decisions": [],
   "risks": [],
   "open_questions": [],
   "traceability": [],
   "validation": {
     "result": "NOT_EXECUTED",
-    "critical_ac_pass": "NOT_EXECUTED",
-    "security_scan_pass": "NOT_EXECUTED",
     "issues": []
   },
   "approval": {

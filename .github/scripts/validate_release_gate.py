@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agentic SDLC Production Release Gate Validator
-Validates G5 Approval Record and Release Handoff integrity before production deployment.
+Agentic SDLC Production Release Gate Validator (v1.1.0)
+Validates G5 Approval Record and Release Handoff integrity before production deployment across lifecycle cycles.
 """
 
 import sys
@@ -24,24 +24,30 @@ def main():
     parser = argparse.ArgumentParser(description="Validate G5 Production Release Gate Approval")
     parser.add_argument("--version", required=True, help="Expected release version")
     parser.add_argument("--commit", required=True, help="Expected release Git commit SHA")
+    parser.add_argument("--cycle", default="INIT-001", help="Execution cycle ID (e.g. INIT-001, CR-0001)")
     parser.add_argument("--root", default=str(REPO_ROOT), help="Repository root path")
 
     args = parser.parse_args()
     root_dir = Path(args.root)
 
-    print("=" * 60)
-    print(" Agentic SDLC G5 Release Gate Validator")
-    print("=" * 60)
+    print("=" * 65)
+    print(" Agentic SDLC G5 Release Gate Validator (v1.1.0)")
+    print("=" * 65)
+    print(f"Cycle ID:       {args.cycle}")
     print(f"Target Version: {args.version}")
     print(f"Target Commit:  {args.commit}")
-    print("-" * 60)
+    print("-" * 65)
 
     errors = []
 
-    # 1. Check G5 Approval Record
-    approval_file = root_dir / "docs" / "approvals" / "G5-production-release.approval.json"
+    # 1. Check G5 Approval Record (in cycle directory or root approvals)
+    cycle_approval_file = root_dir / "docs" / "approvals" / args.cycle / "G5-production-release.approval.json"
+    root_approval_file = root_dir / "docs" / "approvals" / "G5-production-release.approval.json"
+
+    approval_file = cycle_approval_file if cycle_approval_file.is_file() else root_approval_file
+
     if not approval_file.is_file():
-        errors.append(f"G5 Approval Record file not found: {approval_file.relative_to(root_dir)}")
+        errors.append(f"G5 Approval Record file not found: checked {cycle_approval_file.relative_to(root_dir)} and {root_approval_file.relative_to(root_dir)}")
     else:
         try:
             with open(approval_file, "r", encoding="utf-8") as f:
@@ -69,7 +75,7 @@ def main():
             if approved_version and approved_version != args.version.strip():
                 errors.append(f"G5 approved version mismatch: approved '{approved_version}', requested '{args.version}'")
 
-            print(f"[OK]    G5 Approval Record verified: decision={decision}, commit={approved_commit}")
+            print(f"[OK]    G5 Approval Record verified ({approval_file.relative_to(root_dir)}): decision={decision}, commit={approved_commit}")
 
         except Exception as e:
             errors.append(f"Failed to parse G5 approval record {approval_file.name}: {e}")
@@ -95,7 +101,7 @@ def main():
         except Exception as e:
             errors.append(f"Failed to parse Release Handoff {handoff_file.name}: {e}")
 
-    print("-" * 60)
+    print("-" * 65)
     if errors:
         print(f"[FAILED] G5 RELEASE GATE VALIDATION FAILED with {len(errors)} error(s):")
         for err in errors:
@@ -104,7 +110,7 @@ def main():
         sys.exit(1)
     else:
         print("[PASSED] G5 PRODUCTION RELEASE GATE VERIFICATION SUCCEEDED!")
-        print(f"Authorized deployment for Commit: {args.commit} (Version: {args.version})")
+        print(f"Authorized deployment for Commit: {args.commit} (Version: {args.version}, Cycle: {args.cycle})")
         sys.exit(0)
 
 

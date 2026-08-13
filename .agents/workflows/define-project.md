@@ -1,141 +1,83 @@
 ---
-description: Start the DEFINE stage and create the initial project definition.
+description: Start the DEFINE stage and create or differentially update project definition baselines.
 ---
 
 # DEFINE Project Workflow
 
 ## Purpose
 
-신규 프로젝트의 최초 정의 작업을 수행한다.
-
+신규 프로젝트의 최초 정의 또는 Scope 변경으로 인한 재정의 작업을 수행한다.
 이 Workflow는 실제 구현을 시작하지 않는다.
-
 
 ## Required Agent
 
 @pm
 
-
 ## Required Skills
 
 - project-definition
+- change-impact-analysis (when in CHANGE mode)
 
+## Execution Context 확인
+
+Workflow 시작 시 다음 Context를 먼저 확인한다:
+- **Cycle Type**: `INITIAL` (신규 프로젝트) / `CHANGE` (Scope 변경 Re-entry)
+- **Cycle ID**: `INIT-001` 또는 `CR-XXXX`
+- **Active Change ID**: null 또는 `CR-XXXX`
+- **Current Approved Baseline**: 기존 `PROJECT_CHARTER.md`, `SCOPE.md` 버전 확인
+- **Earliest Impacted Stage**: `DEFINE`
 
 ## Preconditions
 
-다음을 확인한다.
-
-- Repository Root가 올바른가
-- project.yaml이 존재하는가
-- .agents/rules/가 존재하는가
-- .agents/agents.md가 존재하는가
-- DEFINE Stage Prompt가 존재하는가
-
-이 Workflow는 최초 Stage이므로
-Previous Gate는 요구하지 않는다.
-
+다음을 확인한다:
+- Repository Root 및 project.yaml 존재 여부
+- .agents/rules/ 및 .agents/agents.md 존재 여부
+- DEFINE Stage Prompt 존재 여부
+- CHANGE 모드인 경우: `docs/changes/<CR_ID>/CHANGE_REQUEST.md`의 `status == "APPROVED"` 및 Earliest Impacted Stage가 `DEFINE`인지 확인
 
 ## Required Inputs
 
-최소한 사용자로부터 다음 중 사용 가능한 정보를 확인한다.
-
-- 프로젝트 아이디어
-- 해결하려는 문제
-- 예상 사용자
-- 알려진 제약조건
-- 관련 사업자료
-
-필수 정보가 부족하면 추측하지 말고 질문한다.
-
+- INITIAL 모드: 사용자 아이디어, 해결 과제, 대상 사용자, 제약 조건
+- CHANGE 모드: `docs/changes/<CR_ID>/CHANGE_REQUEST.md` 및 `IMPACT_ANALYSIS.md`
 
 ## Execution
 
-1. project.yaml을 읽는다.
-
-2. .agents/rules/를 적용한다.
-
-3. .agents/agents.md의 @pm 역할을 따른다.
-
-4. 다음 Stage Prompt를 읽는다.
-
-.agents/prompts/00-project-definition/PROMPT.md
-
-5. DEFINE Stage Prompt의 절차만 수행한다.
-
-6. 다음 Artifact를 생성한다.
-
-docs/00-project-definition/PROJECT_CHARTER.md
-
-docs/00-project-definition/SCOPE.md
-
-docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json
-
+1. `project.yaml` 및 Rules 읽기
+2. `@pm` 역할 적용
+3. `.agents/prompts/00-project-definition/PROMPT.md` 읽기
+4. **Baseline-aware Update (CHANGE 모드 시)**:
+   - 기존 산출물을 처음부터 다시 작성하지 않고, Scope Diff(유지/변경/신규/삭제) 분석을 적용하여 버전 증가(`v1.0 -> v1.1` 등).
+5. 다음 Artifact 생성/갱신:
+   - `docs/00-project-definition/PROJECT_CHARTER.md`
+   - `docs/00-project-definition/SCOPE.md`
+   - `docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json` (metadata에 `cycle_id`, `change_id` 기록)
 
 ## Validation
 
-Stage Prompt의 Validation을 수행한다.
-
-특히 다음을 확인한다.
-
-- Business Problem
-- Goal
-- Target User
-- In Scope
-- Out of Scope
-- Success Metrics
-- Risk
-- Open Questions
-
-
-## Expected Outputs
-
-PROJECT_CHARTER.md
-SCOPE.md
-PROJECT_DEFINITION_HANDOFF.json
-
+- Business Problem, Goal, Target User, In Scope, Out of Scope, Success Metrics, Risk, Open Questions 검증
 
 ## Gate Review Preparation
 
-Human Gate 요청 직전에 다음 절차를 수행한다.
-
-1. Stage Validation을 수행한다.
-2. Gate 대상 Artifact(`PROJECT_CHARTER.md`, `SCOPE.md`)의 status를 DRAFT에서 IN_REVIEW로 변경한다.
-3. Stage Handoff(`docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json`)를 갱신하고 `status = "READY_FOR_APPROVAL"`로 설정한다.
-4. `.agents/templates/approvals/GATE_REVIEW_PACKAGE.template.md`를 기반으로 `docs/approvals/G0-project-definition.review.md`를 생성한다.
-5. Review Package에는 다음을 포함한다.
-   - 승인 대상 Artifact 목록 및 Version
-   - Validation 결과
-   - Blocking Issue
-   - Risks
-   - Open Questions
-   - Human Review Checklist
-   - 허용된 Decision Format (`APPROVE G0`, `APPROVE_WITH_COMMENTS G0: <comments>`, `REJECT G0: <reason>`)
-
+1. Stage Validation 수행
+2. Gate 대상 Artifact status를 `IN_REVIEW`로 변경
+3. `PROJECT_DEFINITION_HANDOFF.json`의 `status = "READY_FOR_APPROVAL"` 설정
+4. `docs/approvals/<CYCLE_ID>/G0-project-definition.review.md` 생성
+5. Review Package 내용 구성 (승인 대상 목록, Validation 결과, Risks, 허용 Decision Format)
 
 ## Human Gate
 
 G0 — Project Definition Approval
 
-완료 후 반드시 다음을 출력하고 STOP한다.
+완료 후 반드시 다음을 출력하고 STOP한다:
 
+```
 G0 PROJECT DEFINITION APPROVAL REQUIRED
+Cycle ID: <CYCLE_ID>
+```
 
 Critical Rule: Human Gate 요청 후 반드시 STOP하며, 다음 Workflow를 자동 실행하지 않는다.
 
-
-## Stop Conditions
-
-G0 승인 전에:
-
-- Requirement 분석 금지
-- Architecture 설계 금지
-- Coding 금지
-
-반드시 STOP한다.
-
-
 ## Next Command
 
-G0가 승인된 후:
-
-/analyze-requirements
+G0 승인 후:
+`/analyze-requirements`

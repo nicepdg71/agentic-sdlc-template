@@ -1,80 +1,63 @@
 ---
 name: ui-design-handoff
-description: Convert approved UI requirements into user flows, screen requirements, component states, accessibility considerations, and a structured handoff for Stitch or implementation.
+description: Assess UI applicability, convert approved UI requirements into user flows, screen requirements, component states, accessibility guidelines, and structured design handoffs for Stitch or implementation.
 ---
 
 # Purpose
 
-Requirement와 UI Design Tool 사이의
-표준 Handoff를 생성한다.
+Requirement와 UI Design Tool / Implementation 사이의
+표준 Handoff를 생성하고 UI 필요성을 체계적으로 평가/연동한다.
 
 # Applicable Stages
 
-DESIGN
+DESIGN, BUILD, VERIFY
 
 # Primary Agent
 
 @ux
 
-# Activation
+# Supporting Agents
 
-project.yaml의 UI Design이 활성화된 경우 사용한다.
+- @architect
+- @engineer
+
+# Activation Lifecycle
+
+- **Activation Phase 1**: DESIGN Stage 시작 시 UI/UX 설계 필요성 평가 (`NOT_REQUIRED`, `RECOMMENDED`, `REQUIRED`).
+- **Activation Phase 2**: Human에게 `UI DESIGN DECISION REQUIRED` 제안 후 사용자 선택(`USE_STITCH`, `SKIP_STITCH`, `USE_OTHER_UI_TOOL`) 대기.
+- **Activation Phase 3**: 사용자가 UI Tool(예: Stitch)을 선택하면 해당 Tool Integration 수행 및 Handoff 생성.
 
 # Inputs
 
-- Approved Requirement
-- User Story
+- Approved Requirements & User Stories
 - Acceptance Criteria
-- Business Rule
-- UI 관련 NFR
+- Business Rules & UI NFRs
 
 # Procedure
 
-1. 사용자 Goal을 식별한다.
-2. 주요 User Flow를 정의한다.
-3. 필요한 Screen을 식별한다.
-4. Screen별 목적을 정의한다.
-5. 입력/출력 Component를 정의한다.
-6. 다음 UI State를 정의한다.
-   - Empty
-   - Loading
-   - Success
-   - Error
-   - Disabled
-7. Responsive Requirement를 정의한다.
-8. 기본 Accessibility 요구를 확인한다.
-9. Stitch 입력 Prompt를 생성한다.
-10. 생성된 UI가 Requirement와 일치하는지 검토한다.
-11. 승인된 UI 정보를 DESIGN Handoff 형태로 정리한다.
+1. **UI 필요성 평가 (Applicability Assessment)**:
+   - 웹/모바일 UI 존재 여부, 사용자 데이터 입력, 대시보드, 다중 화면 흐름, 상태 표현(Loading/Empty/Error/Success), 반응형/접근성 중요도 평가.
+2. **사용자 결정 제안**:
+   - `UI DESIGN DECISION REQUIRED` 출력 및 사용자 응답 수령.
+3. **UI Design Brief 작성**:
+   - 화면별 목적, 필수 컴포넌트, 상태별 요구사항, 프롬프트 정의 (`UI_DESIGN_BRIEF.md`).
+4. **UI Design Handoff 작성**:
+   - 컴포넌트 계층, 레이아웃 규격, 컬러/타이포그래피 토큰, 이벤트 흐름, 접근성 체크리스트 정의 (`UI_DESIGN_HANDOFF.md`).
+5. **Tool Reference 기록**:
+   - `STITCH_PROJECT_REF.json`에 프로젝트 참조 저장 (API Key 제외).
+6. **DESIGN Baseline 통합**:
+   - G2 심사 대상에 UI 산출물을 포함.
 
 # Checklist
 
-- [ ] 모든 주요 User Story에 UI Flow 존재
-- [ ] Error State 존재
-- [ ] Loading State 존재
-- [ ] Mobile/Responsive 요구 검토
-- [ ] Requirement 밖 기능 없음
-
-# Blockers
-
-- User Flow 결정 불가능
-- 서로 충돌하는 UI Requirement
-- UI 변경이 Business Rule 변경을 요구함
+- [ ] 모든 주요 User Story에 대응하는 UI Flow/화면 정의
+- [ ] 5대 UI State(Default, Loading, Empty, Error, Success) 정의
+- [ ] 반응형 Breakpoint 및 모바일/데스크톱 대응 정의
+- [ ] 접근성(Contrast, Keyboard Nav, ARIA) 기본 규칙 정의
+- [ ] Requirement 범위를 벗어난 임의 기능 없음 확인
 
 # Output
 
-- UI Flow
-- Screen Definition
-- Component State
-- Stitch Prompt
-- UI Handoff
-
-# Traceability
-
-User Story
-→ Screen
-→ UI Component
-
-# Handoff
-
-@architect 및 DESIGN Stage로 반환한다.
+- `docs/02-design/ui/UI_DESIGN_BRIEF.md`
+- `docs/02-design/ui/UI_DESIGN_HANDOFF.md`
+- `docs/02-design/ui/STITCH_PROJECT_REF.json`

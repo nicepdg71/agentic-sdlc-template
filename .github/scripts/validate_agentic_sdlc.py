@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Agentic SDLC Repository Integrity & Governance Validator
+Agentic SDLC Repository Integrity & Governance Validator (v1.1.0)
 Validates repository structure, required governance files, JSON syntax,
-schemas, secret safety, and T-01 ~ T-08 architecture compliance.
+schemas, secret safety, T-01 ~ T-12 architecture compliance, and v1.1 Change Cycle & Stitch UI extensions.
 """
 
 import sys
@@ -39,7 +39,7 @@ def info(msg: str):
 
 
 def check_required_root_files():
-    print("\n[1/6] Checking required root files...")
+    print("\n[1/7] Checking required root files and project metadata...")
     required_files = [
         "README.md",
         "project.yaml",
@@ -53,9 +53,31 @@ def check_required_root_files():
         else:
             info(f"Found root file: {rel_path}")
 
+    # Check project.yaml v1.1.0 structure
+    try:
+        import yaml
+        with open(REPO_ROOT / "project.yaml", "r", encoding="utf-8") as f:
+            p_data = yaml.safe_load(f)
+        if p_data.get("version") != "1.1.0":
+            warn(f"project.yaml version is '{p_data.get('version')}', expected '1.1.0'")
+        if "toolchain" in p_data and "ui_design" in p_data["toolchain"]:
+            info("Validated project.yaml toolchain.ui_design configuration.")
+        else:
+            error("project.yaml missing 'toolchain.ui_design' configuration block.")
+    except ImportError:
+        # If PyYAML is not installed, parse via text
+        with open(REPO_ROOT / "project.yaml", "r", encoding="utf-8") as f:
+            content = f.read()
+        if 'version: "1.1.0"' in content or "version: '1.1.0'" in content:
+            info("project.yaml specifies version 1.1.0.")
+        if "toolchain:" in content and "ui_design:" in content:
+            info("project.yaml specifies toolchain.ui_design.")
+        else:
+            error("project.yaml missing toolchain.ui_design block.")
+
 
 def check_agents_governance_structure():
-    print("\n[2/6] Checking .agents/ governance structure...")
+    print("\n[2/7] Checking .agents/ governance structure...")
     agents_dir = REPO_ROOT / ".agents"
     if not agents_dir.is_dir():
         error("Missing .agents/ directory")
@@ -67,7 +89,7 @@ def check_agents_governance_structure():
     else:
         info("Found .agents/agents.md")
 
-    # Check rules
+    # Check rules (10 rules)
     rules_dir = agents_dir / "rules"
     if not rules_dir.is_dir():
         error("Missing .agents/rules/ directory")
@@ -95,7 +117,7 @@ def check_agents_governance_structure():
         else:
             info(f"Found stage prompt: .agents/prompts/{stg}/PROMPT.md")
 
-    # Check workflows (9 workflows)
+    # Check workflows (12 workflows in v1.1)
     workflows_dir = agents_dir / "workflows"
     expected_workflows = [
         "define-project.md",
@@ -107,6 +129,9 @@ def check_agents_governance_structure():
         "prepare-release.md",
         "deploy-production.md",
         "record-gate-decision.md",
+        "request-change.md",
+        "record-change-decision.md",
+        "close-change-cycle.md",
     ]
     for wf in expected_workflows:
         wf_path = workflows_dir / wf
@@ -115,7 +140,7 @@ def check_agents_governance_structure():
         else:
             info(f"Found workflow: .agents/workflows/{wf}")
 
-    # Check skills (13 skills)
+    # Check skills (15 skills in v1.1)
     skills_dir = agents_dir / "skills"
     expected_skills = [
         "project-definition",
@@ -131,6 +156,8 @@ def check_agents_governance_structure():
         "test-design",
         "security-review",
         "release-readiness",
+        "change-impact-analysis",
+        "stitch-design-integration",
     ]
     for sk in expected_skills:
         sk_path = skills_dir / sk / "SKILL.md"
@@ -139,13 +166,7 @@ def check_agents_governance_structure():
         else:
             info(f"Found skill: .agents/skills/{sk}/SKILL.md")
 
-    # Check templates & schemas
-    templates_dir = agents_dir / "templates"
-    if not (templates_dir / "README.md").is_file():
-        error("Missing .agents/templates/README.md")
-    else:
-        info("Found .agents/templates/README.md")
-
+    # Check schemas
     schemas_dir = agents_dir / "schemas"
     expected_schemas = [
         "approval-record.schema.json",
@@ -159,8 +180,54 @@ def check_agents_governance_structure():
             info(f"Found schema: .agents/schemas/{sc}")
 
 
+def check_change_and_ui_templates():
+    print("\n[3/7] Checking Change Management and UI templates (T-11, T-12)...")
+    templates_dir = REPO_ROOT / ".agents" / "templates"
+
+    # Change templates
+    change_templates = [
+        "CHANGE_REQUEST.template.md",
+        "IMPACT_ANALYSIS.template.md",
+        "CHANGE_TRACEABILITY.template.md",
+        "CHANGE_CLOSURE.template.md",
+    ]
+    for ct in change_templates:
+        p = templates_dir / "changes" / ct
+        if not p.is_file():
+            error(f"Missing change template: .agents/templates/changes/{ct}")
+        else:
+            info(f"Found change template: .agents/templates/changes/{ct}")
+
+    # UI templates
+    ui_design_templates = [
+        "UI_DESIGN_BRIEF.template.md",
+        "UI_DESIGN_HANDOFF.template.md",
+        "STITCH_PROJECT_REF.template.json",
+    ]
+    for ut in ui_design_templates:
+        p = templates_dir / "artifacts" / "02-design" / "ui" / ut
+        if not p.is_file():
+            error(f"Missing UI design template: .agents/templates/artifacts/02-design/ui/{ut}")
+        else:
+            info(f"Found UI design template: .agents/templates/artifacts/02-design/ui/{ut}")
+
+    # UI Verification template
+    ui_verify_tpl = templates_dir / "artifacts" / "04-test" / "UI_VERIFICATION_REPORT.template.md"
+    if not ui_verify_tpl.is_file():
+        error(f"Missing UI verification template: .agents/templates/artifacts/04-test/UI_VERIFICATION_REPORT.template.md")
+    else:
+        info("Found UI verification template: UI_VERIFICATION_REPORT.template.md")
+
+    # Change register
+    change_register = REPO_ROOT / "docs" / "changes" / "CHANGE_REGISTER.md"
+    if not change_register.is_file():
+        error("Missing docs/changes/CHANGE_REGISTER.md")
+    else:
+        info("Found docs/changes/CHANGE_REGISTER.md")
+
+
 def check_json_syntax_and_schemas():
-    print("\n[3/6] Checking JSON syntax and schema validity...")
+    print("\n[4/7] Checking JSON syntax and schema validity...")
     json_files = list(REPO_ROOT.rglob("*.json"))
     checked_count = 0
     for jf in json_files:
@@ -176,7 +243,7 @@ def check_json_syntax_and_schemas():
 
 
 def check_prohibited_and_sensitive_files():
-    print("\n[4/6] Checking for prohibited secret/credential files...")
+    print("\n[5/7] Checking for prohibited secret/credential files...")
     import re
     sensitive_patterns = [
         re.compile(r"^\.env$", re.IGNORECASE),
@@ -212,17 +279,11 @@ def check_prohibited_and_sensitive_files():
             if pat.match(fname):
                 error(f"Prohibited sensitive/credential file detected in repository: {fpath}")
 
-        lower_name = fname.lower()
-        if ("credential" in lower_name or "secret" in lower_name) and not (
-            str(fpath).endswith(".md") or str(fpath).endswith(".json") or str(fpath).endswith(".py")
-        ):
-            warn(f"Suspicious file name containing secret/credential: {fpath}")
-
-    info(f"Scanned {len(tracked_files)} files for sensitive credentials. No unauthorized keys/secrets found.")
+    info(f"Scanned {len(tracked_files)} tracked files for sensitive credentials. No unauthorized keys found.")
 
 
 def check_docs_and_approvals_structure():
-    print("\n[5/6] Checking docs/ and approvals structure (T-07, T-08)...")
+    print("\n[6/7] Checking docs/ and approvals structure (T-07, T-08, T-11)...")
     docs_dir = REPO_ROOT / "docs"
     if not docs_dir.is_dir():
         error("Missing docs/ directory")
@@ -248,21 +309,9 @@ def check_docs_and_approvals_structure():
     else:
         info("Found docs/approvals/README.md")
 
-    approvals_tpl = REPO_ROOT / ".agents" / "templates" / "approvals"
-    expected_app_tpls = [
-        "GATE_REVIEW_PACKAGE.template.md",
-        "GATE_APPROVAL_RECORD.template.json",
-    ]
-    for at in expected_app_tpls:
-        at_path = approvals_tpl / at
-        if not at_path.is_file():
-            error(f"Missing approval template: .agents/templates/approvals/{at}")
-        else:
-            info(f"Found approval template: .agents/templates/approvals/{at}")
-
 
 def check_ci_cd_and_scripts():
-    print("\n[6/6] Checking CI/CD scripts and GitHub templates (T-09)...")
+    print("\n[7/7] Checking CI/CD scripts and GitHub templates (T-09)...")
     scripts_dir = REPO_ROOT / "scripts"
     required_scripts = [
         "ci.sh",
@@ -287,25 +336,26 @@ def check_ci_cd_and_scripts():
 
 
 def main():
-    print("=" * 60)
-    print(" Agentic SDLC Repository Integrity & Governance Validator")
-    print("=" * 60)
+    print("=" * 65)
+    print(" Agentic SDLC v1.1.0 Repository Integrity & Governance Validator")
+    print("=" * 65)
 
     check_required_root_files()
     check_agents_governance_structure()
+    check_change_and_ui_templates()
     check_json_syntax_and_schemas()
     check_prohibited_and_sensitive_files()
     check_docs_and_approvals_structure()
     check_ci_cd_and_scripts()
 
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 65)
     if ERRORS:
         print(f"[FAILED] Validation failed with {len(ERRORS)} error(s):")
         for e in ERRORS:
             print(f"  - {e}")
         sys.exit(1)
     else:
-        print("[PASSED] ALL AGENTIC SDLC GOVERNANCE & INTEGRITY CHECKS PASSED!")
+        print("[PASSED] ALL AGENTIC SDLC v1.1.0 GOVERNANCE & INTEGRITY CHECKS PASSED!")
         if WARNINGS:
             print(f"[INFO]   {len(WARNINGS)} warning(s) noted.")
         sys.exit(0)

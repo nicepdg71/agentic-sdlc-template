@@ -5,25 +5,38 @@ Establish the foundational, non-negotiable principles of the Agentic SDLC framew
 
 ## 2. Core Policies
 
-### 2.1 Sequential Phase Progression
-- The development process follows a strict sequential phase-gate model:
-  1. `00-project-definition`
-  2. `01-analysis`
-  3. `02-design`
-  4. `03-implementation`
-  5. `04-test`
-  6. `05-release`
-- Skipping phases or executing tasks out of order without formal escalation is strictly prohibited.
+### 2.1 Sequential Phase Progression & Circular Change Cycle
+- **Initial Lifecycle**:
+  `DEFINE (G0) -> SPEC (G1) -> DESIGN (G2) -> BUILD (G3) -> VERIFY (G4) -> RELEASE (G5) -> Production v1.0`
+- **Repeatable Change Lifecycle**:
+  `Production -> CHANGE REQUEST (/request-change) -> IMPACT ANALYSIS -> Human Approval (APPROVE CR-XXXX) -> Re-enter Earliest Impacted Stage -> Re-approve Required Gates -> Production v1.1 -> CLOSE CHANGE CYCLE (/close-change-cycle)`
+- Skipping phases or jumping directly to implementation without formal change impact assessment is strictly prohibited ("Agent must never decide: 'this fix is simple so I will just code it'").
 
-### 2.2 Handoff Artifact Sealing
-- Every phase transition requires a validated and sealed handoff artifact (`*_HANDOFF.json`).
-- A handoff artifact must list all completed artifacts, verification status (`APPROVED`), and approval metadata.
-- Subsequent phases must consume the previous phase's handoff artifact as an immutable baseline.
+### 2.2 Earliest Impacted Stage Re-entry Principle
+When a Change Request is approved, re-entry begins strictly at the earliest impacted stage:
+| Change Scope | Re-entry Stage | Required Gates for Re-approval |
+|---|---|---|
+| Business Objective / Project Scope | DEFINE | G0 -> G5 |
+| Functional / Non-Functional Requirements | SPEC | G1 -> G5 |
+| Architecture / API / Data Model / UI Design | DESIGN | G2 -> G5 |
+| Implementation / Code / Bug Fix | BUILD PLAN | G3 -> G5 |
+| Test Strategy / Test Cases / Evidence only | VERIFY | G4 -> G5 |
+| Deployment Config / Release Plan only | RELEASE | G5 |
 
-### 2.3 Strict Scope & Assumption Boundaries
+### 2.3 Upstream Approval Preservation
+- Upper-level approved gates remain valid if unaffected (e.g., Requirement change preserves G0 Project Charter approval).
+- Downstream affected artifacts and approvals transition to `STALE` and must be superseded upon re-approval in the new change cycle.
+- Historical approvals are permanently preserved in `docs/approvals/{CYCLE_ID}/` without deletion.
+
+### 2.4 Handoff Artifact Sealing & Cycle Scoping
+- Every phase transition requires a sealed handoff artifact (`*_HANDOFF.json`).
+- All handoff and phase artifacts must record `cycle_id` (e.g. `INIT-001` or `CR-0001`) and `change_id`.
+- Subsequent phases consume previous phase handoffs as an immutable baseline.
+
+### 2.5 Strict Scope & Assumption Boundaries
 - Agents must never assume undocumented requirements or make unverified decisions on behalf of stakeholders.
-- Any ambiguity must be surfaced to human stakeholders through structured inquiry before proceeding.
+- Ambiguities must be surfaced to humans via structured escalation before proceeding.
 
-### 2.4 Auditability & Compliance
-- Every automated action, code change, and test run must leave a verifiable audit trail in documentation.
-- All agent modifications must comply with repository policies and safety guidelines.
+### 2.6 Auditability & Traceability
+- Every automated action, code change, and test run must leave a verifiable audit trail.
+- Full traceability is maintained: `Change Request -> Requirements -> Design -> Implementation -> Test -> Release`.

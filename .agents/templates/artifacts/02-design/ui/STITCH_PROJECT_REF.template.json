@@ -1,0 +1,14 @@
+{
+  "tool": "google-stitch",
+  "integration": "mcp",
+  "project_name": "<STITCH_PROJECT_NAME>",
+  "project_id": "<STITCH_PROJECT_ID>",
+  "design_status": "APPROVED",
+  "related_requirements": [
+    "<REQ_001>",
+    "<REQ_002>"
+  ],
+  "design_handoff": "docs/02-design/ui/UI_DESIGN_HANDOFF.md",
+  "approved_by": "<HUMAN_APPROVER_ID>",
+  "approved_at": "<ISO8601_TIMESTAMP>"
+}

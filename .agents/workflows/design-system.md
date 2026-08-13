@@ -1,170 +1,146 @@
 ---
-description: Design the system architecture from the approved requirement baseline.
+description: Design the system architecture and UI/UX from the approved requirement baseline.
 ---
 
 # System Design Workflow
 
 ## Purpose
 
-승인된 Requirement를
-구현 가능한 Software Design Baseline으로 변환한다.
-
+승인된 Requirement Baseline을 기반으로 구현 가능한 Software Architecture 및 UI/UX Design Baseline으로 변환한다.
 
 ## Required Agent
 
 Primary:
-
 @architect
 
 Supporting when applicable:
-
-@ux
-@ai
-@security
-
+- @ux
+- @ai
+- @security
 
 ## Required Skills
 
 - architecture-design
 - security-review
-
-
-## Conditional Skills
-
+- ui-design-handoff
+- stitch-design-integration (when Stitch is selected)
 - api-contract-design (when interfaces are required)
 - database-design-review (when persistent database is required)
-- ui-design-handoff (when toolchain.ui_design.enabled = true)
 - runtime-ai-design (when runtime_ai.enabled = true)
 
+## Execution Context 확인
+
+- **Cycle Type**: `INITIAL` / `CHANGE`
+- **Cycle ID**: `INIT-001` 또는 `CR-XXXX`
+- **Active Change ID**: null 또는 `CR-XXXX`
+- **Current Approved Baseline**: 기존 Architecture 및 UI 설계 버전
+- **Earliest Impacted Stage**: `DESIGN` (또는 상위)
 
 ## Preconditions
 
-다음을 먼저 엄격하게 검증한다 (Stage Entry Validation).
-
-1. G1 Approval Record (`docs/approvals/G1-requirement-baseline.approval.json`)의 `decision == "APPROVED"` 확인
+1. 현재 Cycle ID에 해당하는 G1 Approval Record(`docs/approvals/<CYCLE_ID>/G1-requirement-baseline.approval.json`)의 `decision == "APPROVED"` 확인
 2. Analysis Handoff (`docs/01-analysis/ANALYSIS_HANDOFF.json`)의 `status == "APPROVED"` 확인
-3. Approval Record에 명시된 Requirement 산출물(`REQUIREMENTS.md`, `USER_STORIES.md`, `ACCEPTANCE_CRITERIA.md`, `TRACEABILITY_MATRIX.md`)의 버전과 실제 파일 버전 일치 확인
 
-어느 하나라도 일치하지 않거나 누락된 경우:
+## UI Applicability Assessment & Human Decision
 
-APPROVAL / HANDOFF INTEGRITY CHECK FAILED
+DESIGN 시작 시 UI/UX 설계 필요성을 평가한다:
 
-를 출력하고 즉시 STOP한다 (다음 Stage를 자동으로 복구하거나 Version을 임의 변경하지 않는다).
+1. **평가 기준**:
+   - 웹/모바일 화면 존재 여부
+   - 사용자 데이터 입력 필요성
+   - Dashboard 존재 여부
+   - 복수 Screen / User Flow 존재 여부
+   - Loading / Empty / Error 등 상태 표현 중요성
+   - Responsive Design & UI 일관성 필요성
+   *(CLI, Batch Job, Backend-only API, Library, Headless Service인 경우 `NOT_REQUIRED`)*
 
+2. **분류**:
+   - `NOT_REQUIRED`
+   - `RECOMMENDED`
+   - `REQUIRED`
 
-## Conditional Agent Check
+3. **Human UI Decision 제안 (RECOMMENDED 또는 REQUIRED인 경우)**:
+   Agent는 도구를 임의로 자동 선택하지 않고, 반드시 사용자에게 다음을 출력하고 결정을 요청한다:
+   ```
+   UI DESIGN DECISION REQUIRED
 
-project.yaml을 확인한다.
+   UI design is recommended for this project.
 
-UI가 활성화되어 있으면:
+   Reason:
+   - <Evaluation reasons>
 
-@ux 관점을 적용한다.
+   Recommended Tool:
+   Google Stitch
 
-Runtime AI가 활성화되어 있으면:
+   Integration:
+   Antigravity <-> Stitch MCP
 
-@ai 관점을 적용한다.
+   Options:
+   USE_STITCH
+   SKIP_STITCH
+   USE_OTHER_UI_TOOL: <tool>
+   ```
+   *Human Decision 전에는 UI Tool Integration을 실행하지 않는다.*
 
-Security는 필요한 설계영역에 적용한다.
-
-
-## Required Inputs
-
-- REQUIREMENTS.md
-- ACCEPTANCE_CRITERIA.md
-- TRACEABILITY_MATRIX.md
-- ANALYSIS_HANDOFF.json
-
+4. **Stitch Integration 절차 (Human 선택이 USE_STITCH인 경우)**:
+   - `project.yaml`의 `toolchain.ui_design.enabled = true`, `selected_tool = stitch`로 설정.
+   - Stitch MCP 연결 상태 확인.
+   - **Fail-Closed 원칙**: MCP가 연결되어 있지 않은 경우 `STITCH INTEGRATION BLOCKED`를 출력한다.
+     ```
+     STITCH INTEGRATION BLOCKED
+     Reason: Stitch MCP not connected
+     Required Action: Configure Stitch MCP in .agents/mcp_config.json
+     ```
+     *(Non-UI 아키텍처 설계는 진행 가능하나, UI Artifact가 누락된 상태에서는 G2를 완료할 수 없음)*
+   - Secret/API Key를 Repository에 절대 기록하지 않는다.
+   - Requirement 기반으로 `docs/02-design/ui/UI_DESIGN_BRIEF.md` 생성.
+   - Stitch MCP를 통해 Design Context/Tokens를 가져와 `docs/02-design/ui/UI_DESIGN_HANDOFF.md` 및 `docs/02-design/ui/STITCH_PROJECT_REF.json` 생성.
 
 ## Execution
 
-1. project.yaml 읽기
-
-2. Rules 읽기
-
-3. @architect 역할 적용
-
-4. Conditional Agent 활성상태 확인
-
-5. 다음 Prompt 읽기
-
-.agents/prompts/02-design/PROMPT.md
-
-6. DESIGN Prompt의 절차를 수행한다.
-
-7. Requirement Coverage를 검증한다.
-
-
-## Expected Outputs
-
-docs/02-design/ARCHITECTURE.md
-
-docs/02-design/DESIGN.md
-
-docs/02-design/DATA_MODEL.md
-
-docs/02-design/SECURITY_DESIGN.md
-
-docs/02-design/adr/
-
-contracts/
-
-docs/02-design/DESIGN_HANDOFF.json
-
+1. `project.yaml` 및 Rules 읽기
+2. `@architect` 및 `@ux` 역할 적용
+3. `.agents/prompts/02-design/PROMPT.md` 읽기
+4. **Baseline-aware Differential Update (CHANGE 모드 시)**:
+   - 기존 Architecture / UI 산출물을 기반으로 변경/신규 컴포넌트만 수정 반영.
+5. 산출물 생성/갱신:
+   - `docs/02-design/ARCHITECTURE.md`
+   - `docs/02-design/DESIGN.md`
+   - `docs/02-design/DATA_MODEL.md`
+   - `docs/02-design/SECURITY_DESIGN.md`
+   - `docs/02-design/ui/UI_DESIGN_BRIEF.md` (UI 활성화 시)
+   - `docs/02-design/ui/UI_DESIGN_HANDOFF.md` (UI 활성화 시)
+   - `docs/02-design/ui/STITCH_PROJECT_REF.json` (Stitch 사용 시)
+   - `docs/02-design/adr/`
+   - `contracts/`
+   - `docs/02-design/DESIGN_HANDOFF.json`
 
 ## Validation
 
-- Critical Requirement Coverage
-- Architecture Consistency
-- Data Model
-- Interface
-- Security
-- ADR 필요성
-- Scope 일치
-
+- Critical Requirement Coverage, Architecture Consistency, Data Model, Interface Contracts, Security, UI Design Alignment 검증
 
 ## Gate Review Preparation
 
-Human Gate 요청 직전에 다음 절차를 수행한다.
-
-1. Stage Validation을 수행한다.
-2. Gate 대상 Artifact(`docs/02-design/ARCHITECTURE.md`, `docs/02-design/DESIGN.md`, `docs/02-design/DATA_MODEL.md`, `docs/02-design/SECURITY_DESIGN.md`, `docs/02-design/adr/*`)의 status를 DRAFT에서 IN_REVIEW로 변경한다.
-3. Stage Handoff(`docs/02-design/DESIGN_HANDOFF.json`)를 갱신하고 `status = "READY_FOR_APPROVAL"`로 설정한다.
-4. `.agents/templates/approvals/GATE_REVIEW_PACKAGE.template.md`를 기반으로 `docs/approvals/G2-design-baseline.review.md`를 생성한다.
-5. Review Package에는 다음을 포함한다.
-   - 승인 대상 Artifact 목록 및 Version
-   - Validation 결과
-   - Blocking Issue
-   - Risks
-   - Open Questions
-   - Human Review Checklist
-   - 허용된 Decision Format (`APPROVE G2`, `APPROVE_WITH_COMMENTS G2: <comments>`, `REJECT G2: <reason>`)
-
+1. Stage Validation 수행
+2. Gate 대상 Artifact status를 `IN_REVIEW`로 변경 (UI Artifacts 포함)
+3. `DESIGN_HANDOFF.json`의 `status = "READY_FOR_APPROVAL"` 설정
+4. `docs/approvals/<CYCLE_ID>/G2-design-baseline.review.md` 생성
+5. Review Package 작성
 
 ## Human Gate
 
 G2 — Design Baseline Approval
 
-완료 후:
+완료 후 반드시 다음을 출력하고 STOP한다:
 
+```
 G2 DESIGN BASELINE APPROVAL REQUIRED
-
-를 출력하고 STOP한다.
+Cycle ID: <CYCLE_ID>
+```
 
 Critical Rule: Human Gate 요청 후 반드시 STOP하며, 다음 Workflow를 자동 실행하지 않는다.
-
-
-## Stop Conditions
-
-- G1 미승인
-- Critical Requirement 미설계
-- Scope 변경 필요
-- Security Blocker
-- 중요한 Architecture 미결정
-- G2 승인 대기
-
 
 ## Next Command
 
 G2 승인 후:
-
-/plan-implementation
+`/plan-implementation`

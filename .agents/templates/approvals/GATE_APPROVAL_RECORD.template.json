@@ -1,52 +1,23 @@
 {
-  "schema_version": "1.0",
-
-  "project_id": "<PROJECT-ID>",
-
-  "gate": "<G0-G5>",
-
-  "gate_name": "<GATE-NAME>",
-
-  "stage": "<STAGE>",
-
-  "review_package": {
-    "id": "<REVIEW-PACKAGE-ID>",
-    "path": "<PATH>"
-  },
-
-  "decision": "PENDING",
-
+  "schema_version": "1.1.0",
+  "project_id": "<PROJECT_ID>",
+  "cycle_id": "<CYCLE_ID>",
+  "change_id": "<CHANGE_ID_OR_NULL>",
+  "gate": "<G0|G1|G2|G3|G4|G5>",
+  "stage": "<DEFINE|SPEC|DESIGN|BUILD|VERIFY|RELEASE>",
+  "decision": "APPROVED",
   "decision_scope": {
     "artifacts": [
       {
-        "artifact_id": "<ARTIFACT-ID>",
-        "path": "<PATH>",
-        "version": "<VERSION>"
+        "id": "<ARTIFACT_ID>",
+        "path": "<DOC_PATH>",
+        "version": "<VERSION>",
+        "hash": "<SHA256>"
       }
     ],
-
-    "release_candidate": {
-      "version": "",
-      "commit": ""
-    }
+    "review_package": "docs/approvals/<CYCLE_ID>/<GATE>-<STAGE_NAME>.review.md"
   },
-
-  "validation": {
-    "result": "PASS",
-    "blocking_issues": []
-  },
-
-  "risks": [],
-
-  "open_questions": [],
-
-  "comments": [],
-
-  "decided_by": "",
-
-  "decided_at": "",
-
-  "next_stage": "<NEXT-STAGE>",
-
-  "next_workflow": "<NEXT-WORKFLOW>"
+  "decided_by": "<HUMAN_REVIEWER_ID_OR_ROLE>",
+  "decided_at": "<ISO8601_TIMESTAMP>",
+  "comments": "<REVIEW_COMMENTS_IF_ANY>"
 }
