@@ -1,6 +1,6 @@
 # Agentic SDLC Project Handover & Conversation History
 
-이 문서는 다른 PC 또는 다른 개발 환경에서 프로젝트 작업을 원활하게 이어갈 수 있도록, 지금까지 진행된 모든 설정, 프레임워크 업그레이드(v1.0 -> v1.1), 거버넌스 규칙, 검증 결과 및 후속 작업 가이드를 상세히 기록한 인수인계 문서입니다.
+이 문서는 다른 PC 또는 다른 개발 환경에서 프로젝트 작업을 즉시 이어서 진행할 수 있도록, 지금까지 진행된 모든 설정, 프레임워크 업그레이드(v1.0 -> v1.1.0), 거버넌스 규칙, 세부 워크플로우, 검증 결과 및 인수인계 절차를 상세히 기록한 마스터 인수인계 문서입니다.
 
 ---
 
@@ -8,19 +8,20 @@
 
 * **프로젝트 명**: `agentic-sdlc-template`
 * **프레임워크 버전**: `v1.1.0` (Governance-first Agentic SDLC)
-* **원격 저장소(GitHub)**: `https://github.com/nicepdg71/agentic-sdlc-template.git`
+* **원격 저장소 (GitHub)**: `https://github.com/nicepdg71/agentic-sdlc-template.git`
 * **기본 브랜치**: `main`
 * **로컬 기본 경로**: `F:\repository\agentic-sdlc-template`
+* **DryRun 테스트 경로**: `F:\repository\agentic-sdlc-template_dryrun`
 
 ---
 
-## 2. 작업 이력 요약 (Chronological History)
+## 2. 작업 이력 및 보완 상세 (Full Chronological Summary)
 
 ### Phase 1: 로컬 리포지토리 초기화 및 원격 동기화
 1. **로컬 디렉토리 생성 및 Git 초기화**:
    - `agentic-sdlc-template` 폴더 생성 및 `git init` 수행.
    - 원격 저장소(`origin`)를 `https://github.com/nicepdg71/agentic-sdlc-template.git`로 등록.
-2. **GitHub MCP 환경 설정 및 보안 조치**:
+2. **GitHub PAT 인증 및 MCP 환경 설정**:
    - [`.agents/mcp_config.json`](file:///F:/repository/agentic-sdlc-template/.agents/mcp_config.json) 생성 및 GitHub PAT 토큰 구성.
    - PAT 토큰 및 환경설정 파일의 원격 노출을 방지하기 위해 [`.gitignore`](file:///F:/repository/agentic-sdlc-template/.gitignore)에 `.agents/mcp_config.json`, `.env` 등을 추가.
 3. **원격 코드베이스 동기화**:
@@ -28,8 +29,8 @@
 
 ---
 
-### Phase 2: SDLC 표준화 프레임워크 v1.0 -> v1.1 구조적 업그레이드
-첨부된 **[agentic-sdlc-template v1.1 설계]** 명세서에 따라 다음 핵심 기능들을 구현 및 표준화했습니다.
+### Phase 2: SDLC 표준화 프레임워크 v1.0 -> v1.1.0 구조적 업그레이드
+제공된 **[agentic-sdlc-template v1.1 설계]** 명세서에 따라 다음 핵심 거버넌스 구조를 표준화했습니다.
 
 #### A. 순환형 Change Cycle 표준화 (T-11)
 * **SDLC 순환 구조 확립**:
@@ -37,12 +38,14 @@
     $$\text{DEFINE} \rightarrow \text{SPEC} \rightarrow \text{DESIGN} \rightarrow \text{BUILD} \rightarrow \text{VERIFY} \rightarrow \text{RELEASE} \rightarrow \text{CHANGE} \rightarrow \text{Earliest Impacted Stage Re-entry}$$
 * **Earliest Impacted Stage Re-entry 원칙**:
   - 모든 변경을 무조건 처음(DEFINE)부터 다시 하지 않고, 영향이 최초 발생하는 Stage부터 재진입:
-    - Scope/사업목표 변경: `DEFINE` (G0 ~ G5 재승인)
-    - 요구사항 추가/변경: `SPEC` (G1 ~ G5 재승인, G0 유지)
-    - Architecture / UI / API / DB 변경: `DESIGN` (G2 ~ G5 재승인)
-    - 구현 / 코드 / 버그 수정: `BUILD PLAN` (G3 ~ G5 재승인)
-    - 테스트 / 증적 변경: `VERIFY` (G4 ~ G5 재승인)
-    - 배포 설정 / 릴리스 계획: `RELEASE` (G5 재승인)
+    | 변경 내용 | Re-entry Stage | 재승인 필요 Gate |
+    |---|---|---|
+    | 사업목표 / Project Scope 변경 | `DEFINE` | G0 $\rightarrow$ G5 |
+    | 요구사항(FR/NFR) 추가 / 변경 | `SPEC` | G1 $\rightarrow$ G5 (G0 유지) |
+    | Architecture / UI / API / DB 설계 변경 | `DESIGN` | G2 $\rightarrow$ G5 |
+    | 구현 방법 / 코드 / 버그 수정 | `BUILD PLAN` | G3 $\rightarrow$ G5 |
+    | 테스트 계획 / 테스트 증적 변경 | `VERIFY` | G4 $\rightarrow$ G5 |
+    | 배포 설정 / 릴리스 계획 변경 | `RELEASE` | G5 |
 * **공식 워크플로우 3종 추가 (총 9개 -> 12개)**:
   1. [`/request-change`](file:///F:/repository/agentic-sdlc-template/.agents/workflows/request-change.md): CR 생성 (`CR-XXXX`), `CHANGE_REQUEST.md`, `IMPACT_ANALYSIS.md`, `CHANGE_TRACEABILITY.md` 생성
   2. [`/record-change-decision`](file:///F:/repository/agentic-sdlc-template/.agents/workflows/record-change-decision.md): 사람의 승인(`APPROVE CR-XXXX` / `REJECT CR-XXXX`), 하위 산출물 `STALE` 처리, 자동 실행 없이 대기
@@ -57,15 +60,28 @@
 
 #### B. DESIGN 단계 UI 자동 진단 & Google Stitch MCP 연동 (T-12)
 * **`project.yaml` 정책 반영**: `toolchain.ui_design.policy: suggest_when_applicable`
-* **UI Applicability Assessment**: DESIGN Stage 시작 시 UI 필요성 평가 (`NOT_REQUIRED` / `RECOMMENDED` / `REQUIRED`).
+* **UI Applicability Assessment**: DESIGN Stage 시작 시 화면, 데이터 입력, 대시보드 등의 필요성을 Agent가 평가 (`NOT_REQUIRED` / `RECOMMENDED` / `REQUIRED`).
 * **Human UI Decision**: Agent가 임의 결정하지 않고 `UI DESIGN DECISION REQUIRED` 메시지로 사용자에게 선택권 제시 (`USE_STITCH`, `SKIP_STITCH`, `USE_OTHER_UI_TOOL`).
 * **신규 스킬 추가 (총 14개 -> 15개)**:
   - [`.agents/skills/stitch-design-integration/SKILL.md`](file:///F:/repository/agentic-sdlc-template/.agents/skills/stitch-design-integration/SKILL.md)
   - [`.agents/skills/ui-design-handoff/SKILL.md`](file:///F:/repository/agentic-sdlc-template/.agents/skills/ui-design-handoff/SKILL.md) 3-phase 구조로 개편
+* **UI 전용 Artifacts & 템플릿**:
+  - `UI_DESIGN_BRIEF.template.md`, `UI_DESIGN_HANDOFF.template.md`, `STITCH_PROJECT_REF.template.json`
+  - `UI_VERIFICATION_REPORT.template.md` (VERIFY 단계에서 Stitch 디자인과 실제 구현 화면 비교 검증)
+* **SSOT 우선순위**:
+  - `Requirements -> UI Design Handoff -> Stitch Project Reference -> Implementation` (충돌 시 `DESIGN CONFLICT DETECTED` 보고)
 
 ---
 
-### Phase 3: Stitch MCP 연동 가이드 및 이원화 모드(Dual Modes) 보완
+### Phase 3: DryRun 검증 및 인터랙티브 프로세스 문서화
+1. **DryRun 환경 복제**:
+   - `F:\repository\agentic-sdlc-template`의 전체 내용을 [`F:\repository\agentic-sdlc-template_dryrun`](file:///F:/repository/agentic-sdlc-template_dryrun)으로 복제하여 독립된 모의 실행 환경 구성.
+2. **프로세스 다이어그램 문서화**:
+   - [`docs/agentic_sdlc_process_diagrams.html`](file:///F:/repository/agentic-sdlc-template/docs/agentic_sdlc_process_diagrams.html) 생성 (HTML/CSS 기반 시각화 프로세스 가이드).
+
+---
+
+### Phase 4: Stitch MCP 연동 가이드 및 이원화 모드(Dual Modes) 보완
 `USE_STITCH` 선택 시 Stitch MCP 미설정 환경에서도 안전하고 유연하게 대처할 수 있도록 방법론을 보완했습니다:
 
 1. **이원화 동작 모드 확립**:
@@ -75,13 +91,13 @@
      - Stitch MCP 서버가 미등록/미연결 상태인 경우, `STITCH MCP SETUP REQUIRED` 메시지와 설정 가이드(Remote HTTP / Local npx / 전역 설정)를 출력.
      - 동시에 [`.agents/templates/artifacts/02-design/ui/STITCH_PROMPTS.template.md`](file:///F:/repository/agentic-sdlc-template/.agents/templates/artifacts/02-design/ui/STITCH_PROMPTS.template.md)를 기반으로 `docs/02-design/ui/STITCH_PROMPTS.md`를 자동 생성하여 Google Stitch Web Console과 수동 연계 지원.
 2. **Fail-Closed 안전 원칙 유지**:
-   - MCP 미연결 시 임의로 UI 설계를 생략하지 않으며, Fallback 프롬프트를 통해 완성된 UI 산출물(`UI_DESIGN_HANDOFF.md`)이 준비되어야 G2 승인 완료 가능.
+   - MCP 미연결 시 임의로 UI 설계를 생략하지 않으며, Fallback 프롬프트를 통해 완성된 UI 산출물(`UI_DESIGN_HANDOFF.md`)이 준비되어야 G2 승인을 완료할 수 있도록 통제.
 3. **Stitch MCP 설정 템플릿 제공**:
    - [`.agents/mcp_config.example.json`](file:///F:/repository/agentic-sdlc-template/.agents/mcp_config.example.json) 추가.
 
 ---
 
-## 3. 검증 결과 (Validation)
+## 3. 거버넌스 및 유효성 검증 (Validation)
 
 통합 유효성 검증 스크립트 실행 결과:
 ```powershell
@@ -123,7 +139,10 @@ cd agentic-sdlc-template
   "mcpServers": {
     "github": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_GITHUB_PAT_HERE>"
       }
@@ -144,13 +163,29 @@ python .github/scripts/validate_agentic_sdlc.py
 ```
 
 ### Step 4: SDLC 프로세스 진행
-* **신규 프로젝트 시작 시**: `/define-project` -> G0 검토 후 `APPROVE G0` 입력
-* **디자인 단계 진입 시**: `/design-system` -> UI 필요 시 `USE_STITCH` 선택 (Live MCP 또는 Fallback 프롬프트 활용)
-* **운영 중 변경 요청 시**: `/request-change` -> `APPROVE CR-XXXX` -> Re-entry
+* **신규 프로젝트 시작 (Initial Cycle)**:
+  ```text
+  /define-project
+  ```
+  -> G0 산출물 검토 후 `APPROVE G0` 입력하여 단계별 진행.
+* **디자인 단계 진입 시**:
+  ```text
+  /design-system
+  ```
+  -> UI 필요 시 `USE_STITCH` 선택 (Live MCP 또는 Fallback 프롬프트 활용) -> `APPROVE G2`.
+* **운영 중 변경 요청 (Change Cycle)**:
+  ```text
+  /request-change
+  ```
+  -> 영향도 분석 보고서 검토 후 `APPROVE CR-XXXX` 입력하여 Earliest Impacted Stage부터 재진입.
+* **배포 완료 후 Change Cycle 공식 종료**:
+  ```text
+  /close-change-cycle
+  ```
 
 ---
 
-## 5. 프로젝트 주요 디렉토리 구조 맵
+## 5. 프로젝트 전체 디렉토리 구조 맵
 
 ```text
 agentic-sdlc-template/
@@ -166,6 +201,7 @@ agentic-sdlc-template/
 │   └── templates/                          # 산출물, 승인 패키지, 변경관리, UI 템플릿
 ├── docs/
 │   ├── CONVERSATION_HISTORY.md             # [본 문서] 인수인계 및 히스토리
+│   ├── agentic_sdlc_process_diagrams.html  # 프로세스 시각화 다이어그램
 │   ├── 00-project-definition/ ~ 05-release/ # Phase별 공식 엔지니어링 산출물
 │   ├── changes/                            # CHANGE_REGISTER.md 및 CR-XXXX별 산출물
 │   └── approvals/                          # INIT-001/, CR-0001/ 등 Cycle별 Gate 승인 보존소
