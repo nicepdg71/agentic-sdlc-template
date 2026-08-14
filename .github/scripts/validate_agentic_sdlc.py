@@ -203,6 +203,7 @@ def check_change_and_ui_templates():
         "UI_DESIGN_BRIEF.template.md",
         "UI_DESIGN_HANDOFF.template.md",
         "STITCH_PROJECT_REF.template.json",
+        "STITCH_PROMPTS.template.md",
     ]
     for ut in ui_design_templates:
         p = templates_dir / "artifacts" / "02-design" / "ui" / ut

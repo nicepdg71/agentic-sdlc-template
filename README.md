@@ -7,7 +7,7 @@ This template establishes a standardized directory layout, agent governance rule
 
 **Version 1.1 Enhancements:**
 - **Repeatable Change Cycle**: Upgrades the linear SDLC to a circular lifecycle (`/request-change` -> Impact Analysis -> Earliest Impacted Stage Re-entry -> Gate Re-approvals -> `/close-change-cycle`).
-- **UI Design Decision & Google Stitch MCP Integration**: Automated UI applicability assessment in DESIGN (`/design-system`), human-in-the-loop tool decision (`USE_STITCH`), and fail-closed Stitch MCP design synchronization.
+- **UI Design Decision & Google Stitch MCP Integration**: Automated UI applicability assessment in DESIGN (`/design-system`), human-in-the-loop tool decision (`USE_STITCH`), Live MCP sync or Fallback Prompt Mode, and fail-closed design synchronization.
 - **Cycle-scoped Approvals & STALE State**: Archival of approval records in `docs/approvals/{CYCLE_ID}/` with downstream artifact staleness tracking.
 
 ---
@@ -19,6 +19,7 @@ This template establishes a standardized directory layout, agent governance rule
   - `skills/`: Specialized capabilities (Change Impact Analysis, Stitch MCP, Architecture, etc.).
   - `templates/`: Structured templates for phase artifacts, approvals, changes, and UI design.
   - `schemas/`: JSON schemas for approval records and stage handoffs.
+  - `mcp_config.example.json`: Reference MCP configuration for GitHub and Google Stitch servers.
 - `docs/`: Phase-by-phase engineering artifacts, change logs, and handoff contracts.
   - `00-project-definition/` ~ `05-release/`
   - `changes/`: `CHANGE_REGISTER.md` and cycle folders (`CR-XXXX/`).
@@ -50,6 +51,38 @@ This template establishes a standardized directory layout, agent governance rule
 4. Re-obtain required gates up to G5.
 5. `/deploy-production`: Deploy updated release (e.g. v1.1.0).
 6. `/close-change-cycle`: Formally verify traceability and seal the Change Request as `CLOSED`.
+
+---
+
+## Google Stitch MCP Integration & Fallback Modes
+
+When UI design is activated via `USE_STITCH`:
+1. **Live MCP Mode (Automatic)**:
+   - When Stitch MCP is configured in `.agents/mcp_config.json`, Antigravity communicates directly with Stitch to sync screen structures, color/typography tokens, and component metadata into `UI_DESIGN_HANDOFF.md` and `STITCH_PROJECT_REF.json`.
+2. **Fallback Prompt Mode (Web UI Integration)**:
+   - If Stitch MCP is unconfigured/unreachable, Antigravity provides setup guidance and generates `docs/02-design/ui/STITCH_PROMPTS.md`.
+   - Developers can paste these prompts into Google Stitch Web Console, then finalize `UI_DESIGN_HANDOFF.md` to complete G2 approval.
+
+### Stitch MCP Configuration Example (`.agents/mcp_config.json`)
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_GITHUB_PAT>"
+      }
+    },
+    "stitch": {
+      "serverUrl": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "<YOUR_GOOGLE_STITCH_API_KEY>"
+      }
+    }
+  }
+}
+```
 
 ---
 
