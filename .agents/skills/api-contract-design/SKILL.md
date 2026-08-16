@@ -31,8 +31,10 @@ DESIGN
 4. Input Schema를 정의한다.
 5. Output Schema를 정의한다.
 6. 필수/선택 Field를 명확히 한다.
-7. Validation Rule을 정의한다.
-8. Error Contract를 정의한다.
+7. Validation Rule을 정의한다 (문자열 UTF-8 및 특수문자 제약 포함).
+8. Error Contract 및 다국어 응답 구조를 정의한다:
+   - `Accept-Language` 헤더(`ko`, `en`) 수용 및 기본 로케일 Fallback.
+   - 표준화된 에러 응답 객체 (`error_code`, `message`, `details`, `timestamp`).
 9. Authentication/Authorization 필요성을 식별한다.
 10. Versioning 정책을 검토한다.
 11. Breaking Change 위험을 확인한다.

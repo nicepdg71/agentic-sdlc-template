@@ -60,9 +60,24 @@ source_artifacts:
 | | | | |
 
 
-## 8. Error Handling Strategy
+## 8. Internationalization (i18n) & Localization Architecture
 
--
+### Locale Resolution & Negotiation
+- Client Request Header: `Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7`
+- Resolution Order: Explicit User Preference > Cookie/Session Locale > `Accept-Language` Header > Default Locale (`ko`)
+- Fallback Locale: English (`en`)
+
+### Message Catalog & Resource Bundles
+- Structure: Key-based resource catalogs (`locales/ko.json`, `locales/en.json`)
+- Dynamic loading & client-side cache strategy
+
+### Character Encoding & Timezone Standards
+- Uniform UTF-8 character encoding pipeline across all layers (DB `utf8mb4`, HTTP `charset=utf-8`, JSON payloads)
+- System Timezone: UTC standard storage, localized rendering at presentation layer
+
+## 9. Error Handling Strategy
+
+- Global Error Dispatcher with localized error messages resolved by error code and active locale.
 
 
 ## 9. Observability

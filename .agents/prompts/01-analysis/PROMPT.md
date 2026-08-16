@@ -85,10 +85,12 @@ FR-002
 - Scalability
 - Reliability
 - Compliance
+- **Internationalization & Localization (NFR-i18n)**: 한국어(`ko`), 영어(`en`) 다국어 지원, 로케일 전환, 다국어 메시지/에러 및 날짜/통화 포맷
 
 예:
 
 NFR-SEC-001
+NFR-i18n-001
 
 ### 4. User Story
 

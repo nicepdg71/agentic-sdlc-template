@@ -31,13 +31,17 @@ VERIFY
 3. Positive Case를 작성한다.
 4. Negative Case를 작성한다.
 5. Boundary/Edge Case를 작성한다.
-6. Integration Case를 작성한다.
-7. Contract Test를 작성한다.
-8. 주요 User Flow의 E2E Test를 정의한다.
-9. Regression 범위를 정의한다.
-10. Test Data를 정의한다.
-11. 실행 결과를 Evidence로 기록한다.
-12. AC → TC → Result를 연결한다.
+6. Multilingual (i18n) Test Case를 작성한다:
+   - 한국어(`ko`) 및 영어(`en`) 환경별 입력/조회/검색 검증.
+   - 한글 유니코드 정규화(NFC/NFD) 및 특수문자 인코딩 검증.
+   - 다국어 전환 시 UI 텍스트 오버플로우/말줄임(Truncation) 및 레이아웃 깨짐 검증.
+7. Integration Case를 작성한다.
+8. Contract Test를 작성한다.
+9. 주요 User Flow의 E2E Test를 정의한다.
+10. Regression 범위를 정의한다.
+11. Test Data를 정의한다 (한국어 및 영어 데이터셋).
+12. 실행 결과를 Evidence로 기록한다.
+13. AC → TC → Result를 연결한다.
 
 # Result Values
 

@@ -38,7 +38,8 @@ VERIFY
 9. Test Coverage를 검토한다.
 10. 관련 없는 Refactoring을 탐지한다.
 11. API/DB Contract 위반을 확인한다.
-12. 개선사항과 Blocker를 구분한다.
+12. 사용자 노출 텍스트의 하드코딩 여부 및 다국어(i18n) 리소스 번들 준수 여부를 검사한다.
+13. 개선사항과 Blocker를 구분한다.
 
 # Finding Classification
 

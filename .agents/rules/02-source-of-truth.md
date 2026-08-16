@@ -26,3 +26,7 @@ The priority order of authority is strictly defined as follows:
 
 ### 3.3 Specification Synchronization
 - If implementation reveals a necessary change to an interface or architecture, the corresponding documentation in `docs/` or contract in `contracts/` must be updated and approved **before** modifying the source code.
+
+### 3.4 Multilingual & Internationalization (i18n) SSOT
+- All user-facing UI text, error messages, and system prompts must be externalized into multilingual resource bundles (`ko.json`, `en.json`) mapped directly to keys defined in `UI_DESIGN_HANDOFF.md` and interface contracts. Hardcoded user-visible text in source code is strictly prohibited.
+- Text encoding across all tiers (Database, Backend API, Frontend UI, Runtime AI) must strictly standardize on UTF-8 (`utf8mb4` for persistent stores).

@@ -64,6 +64,10 @@ def check_required_root_files():
             info("Validated project.yaml toolchain.ui_design configuration.")
         else:
             error("project.yaml missing 'toolchain.ui_design' configuration block.")
+        if "i18n" in p_data and p_data["i18n"].get("enabled") is True:
+            info(f"Validated project.yaml i18n configuration (default: {p_data['i18n'].get('default_locale')}, locales: {p_data['i18n'].get('supported_locales')}).")
+        else:
+            error("project.yaml missing or invalid 'i18n' configuration block.")
     except ImportError:
         # If PyYAML is not installed, parse via text
         with open(REPO_ROOT / "project.yaml", "r", encoding="utf-8") as f:
@@ -74,6 +78,10 @@ def check_required_root_files():
             info("project.yaml specifies toolchain.ui_design.")
         else:
             error("project.yaml missing toolchain.ui_design block.")
+        if "i18n:" in content and "default_locale:" in content:
+            info("project.yaml specifies i18n configuration.")
+        else:
+            error("project.yaml missing i18n block.")
 
 
 def check_agents_governance_structure():

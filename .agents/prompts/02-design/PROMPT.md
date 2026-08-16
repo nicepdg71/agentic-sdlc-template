@@ -77,7 +77,7 @@ Component / Service Boundary를 정의한다.
 
 필요한 경우:
 
-- API
+- API (`Accept-Language` 헤더 수용 및 다국어 에러 응답 규격 포함)
 - Event
 - Message
 
@@ -85,7 +85,10 @@ Contract를 설계한다.
 
 ### 5. Data Model
 
-Entity, Relationship, 주요 Constraint를 설계한다.
+Entity, Relationship, 주요 Constraint를 설계한다:
+- `utf8mb4` 문자셋 및 다국어 Collation
+- UTC 타임스탬프 필드 표준
+- 다국어 저장 패턴 (컬럼 접미사, JSONB 또는 번역 테이블)
 
 ### 6. Security
 
@@ -99,11 +102,12 @@ Entity, Relationship, 주요 Constraint를 설계한다.
 
 ### 7. Error Handling
 
-대표 Error 및 처리방식을 정의한다.
+대표 Error 코드 및 로케일별(ko/en) 메시지 카탈로그 매핑 방식을 정의한다.
 
-### 8. Logging / Observability
+### 8. Internationalization (i18n) & Observability
 
-필요한 Logging, Metric, Trace를 정의한다.
+- 클라이언트 로케일 해석 미들웨어 및 리소스 번들 분리 아키텍처를 정의한다.
+- 필요한 Logging, Metric, Trace를 정의한다 (유니코드/UTF-8 로그 보장).
 
 ### 9. Deployment Architecture
 
@@ -112,9 +116,12 @@ Local / Dev / Staging / Production을 고려한다.
 ### 10. UI/UX
 
 UI가 활성화된 경우 @ux를 활용한다.
-
-Stitch가 설정된 경우
-Stitch 입력용 Prompt 및 UI Handoff를 생성한다.
+1. **Main Screens & Sub Screens**: 핵심 1차 화면(대시보드, 메인 목록) 및 2차 화면(상세, 모달, 드로어)을 구체적으로 분할 설계한다.
+2. **Screen Workflow & Transition Map**: 화면 간 전이 트리거 이벤트, 파라미터 전달, 복귀/뒤로가기 흐름, Mermaid 플로우차트를 설계한다 (`UI_DESIGN_BRIEF.md`).
+3. **Multilingual UI Design**: 한국어(`ko`)/영어(`en`) 지원을 위한 언어 전환기(Language Switcher), CJK/Latin 폰트 타이포그래피 토큰, 한-영 텍스트 길이 가변성(1.3~1.5x)을 수용하는 레이아웃을 설계한다.
+4. **Stitch Generation**: Stitch가 설정된 경우 Main/Sub 화면, Screen Workflow 및 다국어 레이아웃 지시문을 MCP 파라미터 또는 `STITCH_PROMPTS.md`로 전달하여 디자인 생성을 요청한다.
+5. **Mandatory Human Review Stop**: Stitch 자동 생성이 완료된 후 즉시 멈추고 `STITCH UI DESIGN REVIEW & REFINEMENT REQUIRED`를 출력하여 사람의 검토 및 수정을 기다린다.
+6. **Confirmation & Baseline Sync**: 사람이 `CONFIRM_STITCH_DESIGN_COMPLETED`를 입력하면 최종 디자인을 `UI_DESIGN_HANDOFF.md` 및 `STITCH_PROJECT_REF.json`에 동기화한다.
 
 ### 11. Runtime AI
 

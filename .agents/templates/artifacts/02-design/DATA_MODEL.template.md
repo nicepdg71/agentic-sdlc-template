@@ -39,7 +39,16 @@ Related Requirement:
 | | | |
 
 
-## 4. Constraints
+## 4. Character Encoding, Collation & Multilingual Strategy
+
+- **Character Set**: `utf8mb4` (Strict UTF-8 encoding support for full Unicode including CJK/Hangul)
+- **Collation**: `utf8mb4_unicode_ci` / `ko_KR.utf8`
+- **Timezone Standard**: UTC (`TIMESTAMP WITH TIME ZONE`)
+- **Multilingual Storage Pattern**:
+  - Pattern Choice: `<COLUMN_SUFFIX (e.g. name_ko, name_en) | LOCALIZED_JSONB | TRANSLATION_TABLE>`
+  - Fallback Strategy: Return English (`en`) when requested locale field is empty
+
+## 5. Constraints
 
 -
 

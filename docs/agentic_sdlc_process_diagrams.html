@@ -286,9 +286,83 @@ sequenceDiagram
       </div>
     </div>
 
-    <!-- Card 3: Governance Principles -->
+    <!-- Card 3: Google Stitch UI Lifecycle -->
     <div class="card">
-      <h2>3. Agentic SDLC 핵심 거버넌스 4대 원칙</h2>
+      <h2>3. Google Stitch MCP & UI Handoff 연동 생명주기 (Human-in-the-Loop)</h2>
+      <p class="desc">UI 설계 시 Main 화면과 Sub 화면, 그리고 화면 간 상호작용 워크플로우를 Stitch에 전달하고, Stitch 자동 생성이 완료된 후 사람이 검토 및 수정을 마칠 때까지 에이전트가 대기하는 4단계 수명주기입니다.</p>
+      
+      <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor H as 👤 디자이너 / 개발자 (Human)
+    participant A as 🤖 Antigravity Agent (@ux / @architect)
+    participant S as 🎨 Google Stitch (MCP / Console)
+    participant D as 📁 docs/02-design/ui/ (Artifacts)
+
+    Note over H, D: [Phase 1: UI & Workflow 사양 정의]
+    A->>D: UI_DESIGN_BRIEF.md 작성 (Main Screens, Sub Screens & Inter-screen Workflow)
+    A-->>H: ❓ UI TOOL DECISION (USE_STITCH / SKIP_STITCH)
+    H->>A: USE_STITCH
+
+    Note over H, D: [Phase 2: Stitch 디자인 생성 요청]
+    alt Live MCP Mode
+        A->>S: MCP 호출 (Main/Sub 화면 사양 및 화면 전이 워크플로우 파라미터 전달)
+        S-->>A: 초기 디자인 생성 완료 응답
+    else Fallback Prompt Mode
+        A->>D: STITCH_PROMPTS.md 생성 (Main/Sub 화면 및 전이 프롬프트)
+        H->>S: Stitch Web Console에 프롬프트 입력 및 디자인 생성
+    end
+
+    Note over H, D: [Phase 3: 인간 디자이너/개발자 검토 및 수정 대기 (BLOCKING GATE)]
+    A-->>H: 🛑 "STITCH UI DESIGN REVIEW & REFINEMENT REQUIRED" (에이전트 진행 차단)
+    Note over H, S: 👤 사람이 Stitch에서 레이아웃, 토큰, 컴포넌트 및 화면 흐름 검토/수정
+
+    Note over H, D: [Phase 4: 완료 확인 & Handoff 동기화]
+    H->>A: CONFIRM_STITCH_DESIGN_COMPLETED
+    A->>S: (Live MCP) 최종 수정 디자인/토큰 동기화 조회
+    A->>D: UI_DESIGN_HANDOFF.md 갱신 및 STITCH_PROJECT_REF.json 완료 기록
+    A-->>H: 🛑 "G2 DESIGN BASELINE APPROVAL REQUIRED" (STOP)
+      </div>
+    </div>
+
+    <!-- Card 4: Multilingual i18n Architecture -->
+    <div class="card">
+      <h2>4. 한국어 및 영어 다국어(i18n & l10n) 표준 아키텍처 및 처리 파이프라인</h2>
+      <p class="desc">UI 프론트엔드부터 백엔드 API, 데이터베이스 및 런타임 AI까지 전 계층에서 한국어(<code>ko</code>)와 영어(<code>en</code>)를 일관되게 처리하는 아키텍처 표준입니다.</p>
+      
+      <div class="mermaid">
+flowchart TD
+    subgraph UI_LAYER["1. UI / Presentation Layer (Frontend)"]
+        LS["언어 전환기 (Language Switcher)<br/>(KR ↔ EN Toggle)"] --> LOC_STATE["Locale Context State<br/>(ko / en)"]
+        LOC_STATE --> BUNDLE["i18n 리소스 번들<br/>(locales/ko.json, locales/en.json)"]
+        BUNDLE --> TYPO["CJK / Latin 폰트 렌더링<br/>(Pretendard / Inter, 1.3~1.5x 확장 수용)"]
+    end
+
+    subgraph API_LAYER["2. API & Service Layer (Backend)"]
+        REQ["HTTP Request<br/>(Accept-Language: ko-KR, en-US)"] --> MW["Locale Resolution Middleware"]
+        MW --> SVC["Business Logic (Locale-Aware)"]
+        SVC --> ERR_DISP["다국어 에러 디스패처<br/>(error_code -> ko/en message)"]
+        SVC --> AI["Runtime AI Prompt<br/>(User Locale Output Guarantee)"]
+    end
+
+    subgraph DATA_LAYER["3. Persistent Data Layer (Database)"]
+        DB[("UTF-8 Database (utf8mb4)<br/>Collation: utf8mb4_unicode_ci")]
+        UTC["시각 표준: UTC Timestamp<br/>(TIMESTAMP WITH TIME ZONE)"]
+        MULTI_COL["다국어 컬럼 / JSONB / 번역 테이블<br/>(name_ko, name_en, fallback: en)"]
+    end
+
+    UI_LAYER -- "Accept-Language Header" --> API_LAYER
+    API_LAYER -- "UTF-8 SQL / JSONB Query" --> DATA_LAYER
+
+    style UI_LAYER fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+    style API_LAYER fill:#f3e8ff,stroke:#7e22ce,stroke-width:2px
+    style DATA_LAYER fill:#ecfdf5,stroke:#059669,stroke-width:2px
+      </div>
+    </div>
+
+    <!-- Card 5: Governance Principles -->
+    <div class="card">
+      <h2>5. Agentic SDLC 핵심 거버넌스 4대 원칙</h2>
       <div class="rules-grid">
         <div class="rule-box">
           <div class="rule-title">1. Stop on Gate</div>

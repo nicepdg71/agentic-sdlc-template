@@ -95,6 +95,41 @@
 3. **Stitch MCP 설정 템플릿 제공**:
    - [`.agents/mcp_config.example.json`](file:///F:/repository/agentic-sdlc-template/.agents/mcp_config.example.json) 추가.
 
+### Phase 5: Google Stitch MCP & UI Handoff 연동 고도화 (Main/Sub 화면, 워크플로우 전달 및 인간 수정 게이트)
+Stitch UI 연동을 단순 화면 조회를 넘어, 엔드투엔드 사용자 흐름과 인간 디자이너/엔지니어의 직접 검토·수정을 보장하는 4-Phase 생명주기로 고도화했습니다:
+
+1. **Main 화면 & Sub 화면(모달/드로어/상세) 및 Screen Workflow 구체화**:
+   - `UI_DESIGN_BRIEF.template.md`, `UI_DESIGN_HANDOFF.template.md`에 Main Screens와 Sub Screens 계층을 분리 정의.
+   - 화면 간 전이 트리거 이벤트, 파라미터 전달, 복귀/뒤로가기 흐름, Mermaid 플로우차트를 필수 명세화.
+2. **Stitch MCP 전달 시 화면 목록 및 워크플로우 동시 반영**:
+   - Live MCP 호출 및 `STITCH_PROMPTS.template.md`에 Main/Sub 화면 사양뿐 아니라 화면 간 연결 및 상호작용 지시문을 함께 패키징하여 Stitch가 화면 흐름까지 인지하여 생성하도록 구성.
+3. **Stitch 자동 생성 후 인간 수정 대기 블로킹 게이트 (Human-in-the-Loop)**:
+   - Stitch 자동 생성이 완료된 후 에이전트가 임의로 다음 단계(G2 또는 BUILD)로 진행하지 않고 즉시 정지하는 `STITCH UI DESIGN REVIEW & REFINEMENT REQUIRED` 게이트 신설 (`Rule 01` 반영).
+   - 사람이 Stitch 콘솔에서 레이아웃, 토큰, 컴포넌트, 화면 흐름을 직접 검토하고 보정할 수 있도록 보장.
+4. **완료 확인(`CONFIRM_STITCH_DESIGN_COMPLETED`) 및 Handoff 최종 동기화**:
+   - 사람이 `CONFIRM_STITCH_DESIGN_COMPLETED` 명령을 입력하면 Stitch의 최종 결과물을 `UI_DESIGN_HANDOFF.md` 및 `STITCH_PROJECT_REF.json`에 동기화하고 G2 승인 심사 패키지로 안전하게 전환.
+5. **시각화 다이어그램 갱신**:
+   - `docs/agentic_sdlc_process_diagrams.html`에 Google Stitch MCP & UI Handoff 연동 생명주기 다이어그램 카드 추가.
+
+### Phase 6: 한국어 및 영어 다국어(i18n & l10n) 시스템 표준화
+UI 프론트엔드부터 백엔드 API, 데이터 모델, 런타임 AI 및 테스트 검증까지 시스템 전 계층에 걸쳐 한국어(`ko`)와 영어(`en`)를 일관되게 지원하도록 Agentic SDLC 표준을 구축했습니다:
+
+1. **프로젝트 메타데이터 및 거버넌스 룰**:
+   - `project.yaml`에 `i18n` 표준 블록(`default_locale: "ko"`, `supported_locales: ["ko", "en"]`, `charset: "UTF-8"`, `timezone: "UTC"`) 명세.
+   - `Rule 02` (i18n SSOT 및 하드코딩 금지), `Rule 06` (데이터베이스 `utf8mb4` 및 다국어 모델링), `Rule 07` (다국어 테스트 증적 의무화) 반영.
+2. **UI & Stitch 연동 템플릿**:
+   - `UI_DESIGN_BRIEF.template.md`, `UI_DESIGN_HANDOFF.template.md`, `STITCH_PROMPTS.template.md`에 언어 전환기(Language Switcher) 컴포넌트, CJK/Latin 폰트 타이포그래피 토큰, 한-영 텍스트 가변성(1.3~1.5배) 수용 레이아웃 가이드라인 추가.
+3. **아키텍처 및 API 인터페이스**:
+   - `ARCHITECTURE.template.md`에 로케일 협상 미들웨어(`Accept-Language` 헤더 해석), 다국어 에러 디스패치 및 메시지 카탈로그 구조 신설.
+   - `api-contract-design` 스킬에 다국어 API 응답 및 에러 규격 표준화.
+4. **데이터베이스 & 런타임 AI**:
+   - `DATA_MODEL.template.md`에 `utf8mb4` 문자셋, 다국어 Collation, UTC 타임스탬프 및 다국어 컬럼/JSONB 저장 전략 추가.
+   - `runtime-ai-design` 스킬에 사용자 로케일 일치 응답 계약 명세.
+5. **테스트 및 검증**:
+   - `TEST_PLAN.template.md`, `TEST_REPORT.template.md`에 한/영 입력 검증, 유니코드 완성형/조합형(NFC/NFD) 정규화, UI 텍스트 오버플로우/말줄임 검증 항목 추가.
+6. **무결성 검증 도구**:
+   - `validate_agentic_sdlc.py`에 `i18n` 메타데이터 및 구조 무결성 검증 추가.
+
 ---
 
 ## 3. 거버넌스 및 유효성 검증 (Validation)

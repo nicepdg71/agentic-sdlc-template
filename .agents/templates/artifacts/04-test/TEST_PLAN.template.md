@@ -34,16 +34,16 @@ approval_gate: "G4"
 - Negative
 - Regression
 - Security
-
+- Internationalization (i18n: Korean & English)
 
 ## 4. Test Environment
 
 -
 
-
 ## 5. Test Data
 
--
+- Korean (`ko`) Test Dataset (Hangul NFC/NFD, special characters)
+- English (`en`) Test Dataset (standard ASCII/Latin, boundary inputs)
 
 
 ## 6. Entry Criteria

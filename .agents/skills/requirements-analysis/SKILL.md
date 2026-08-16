@@ -30,12 +30,12 @@ SPEC
 1. Stakeholder Goal을 식별한다.
 2. Functional Requirement 후보를 추출한다.
 3. 각 FR에 고유 ID를 부여한다.
-4. Non-functional Requirement를 식별한다.
-5. User Story를 작성한다.
+4. Non-functional Requirement를 식별한다 (보안, 성능, 신뢰성 및 **NFR-i18n: 한국어/영어 다국어 지원, 로케일 전환, 다국어 메시지/날짜 포맷**).
+5. User Story를 작성한다 (다국어 환경에서의 사용자 여정 포함).
 6. Business Rule을 분리한다.
-7. 각 Critical Requirement에 Acceptance Criteria를 작성한다.
-8. Data Requirement를 식별한다.
-9. External Interface Requirement를 식별한다.
+7. 각 Critical Requirement에 Acceptance Criteria를 작성한다 (한국어 및 영어 환경에서의 수용 기준 명시).
+8. Data Requirement를 식별한다 (다국어 데이터 저장 및 UTF-8 인코딩 요구사항).
+9. External Interface Requirement를 식별한다 (`Accept-Language` 헤더 및 다국어 에러 페이로드).
 10. Requirement Dependency를 분석한다.
 11. Requirement Conflict를 탐지한다.
 12. Priority 후보를 작성한다.

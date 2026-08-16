@@ -48,6 +48,11 @@ source_artifacts:
 ### Excluded Users
 -
 
+### Target Languages & Locales
+- Primary Locale: Korean (`ko`)
+- Supported Locales: Korean (`ko`), English (`en`)
+- Fallback Locale: English (`en`)
+
 
 ## 5. Dependencies
 

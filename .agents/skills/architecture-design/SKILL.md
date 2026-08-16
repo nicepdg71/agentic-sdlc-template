@@ -34,13 +34,17 @@ DESIGN
 5. Service Boundary를 결정한다.
 6. 주요 Data Flow를 설계한다.
 7. Sync/Async Interface를 식별한다.
-8. Error Handling 정책을 설계한다.
-9. Logging/Metric/Tracing 필요성을 정의한다.
-10. Deployment 구조를 작성한다.
-11. Scalability와 Availability 요구를 반영한다.
-12. 주요 기술 선택의 대안을 비교한다.
-13. 중요한 결정을 ADR 후보로 기록한다.
-14. Requirement Coverage를 검증한다.
+8. Error Handling 정책을 설계한다 (에러 코드 기반 다국어 메시지 매핑 전략 포함).
+9. Internationalization (i18n) & Localization 구조를 설계한다:
+   - 클라이언트 요청(`Accept-Language` 헤더 / 프로필 설정) 기반 Locale Resolution Middleware.
+   - 다국어 메시지 카탈로그(ko/en) 분리 및 동적 로딩 아키텍처.
+   - 전 계층 UTF-8 인코딩 및 시각 표준(UTC) 파이프라인.
+10. Logging/Metric/Tracing 필요성을 정의한다.
+11. Deployment 구조를 작성한다.
+12. Scalability와 Availability 요구를 반영한다.
+13. 주요 기술 선택의 대안을 비교한다.
+14. 중요한 결정을 ADR 후보로 기록한다.
+15. Requirement Coverage를 검증한다.
 
 # Checklist
 

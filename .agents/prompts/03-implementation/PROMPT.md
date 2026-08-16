@@ -147,15 +147,17 @@ Protected Branch에 직접 작업하지 않는다.
 ### 2. Approved Plan 범위 구현
 
 Implementation Plan에 승인된 범위만 구현한다.
+- 사용자 노출 텍스트는 하드코딩하지 않고 다국어 리소스 번들(`ko.json`, `en.json`)에 분리 구현한다.
+- 모든 파일 인코딩은 UTF-8을 준수한다.
 
 ### 3. Unit Test
 
-구현과 함께 Test를 작성한다.
+구현과 함께 Test를 작성한다 (한국어/영어 다국어 입력 및 로케일 처리 테스트 포함).
 
 ### 4. Migration
 
 필요한 경우 초안을 생성하되
-Database Rule을 적용한다.
+Database Rule(utf8mb4, UTC 타임스탬프)을 적용한다.
 
 ### 5. Documentation
 

@@ -31,53 +31,93 @@ Color Palette Requirements:
 - Background/Surface: <SURFACE_TONE>
 - State Feedback: Success (Green), Warning (Amber), Error (Red), Info (Blue)
 Typography & Layout:
-- Font: Modern Sans-Serif (e.g. Inter, Roboto)
+- Font: Modern Sans-Serif with full CJK Hangul and Latin character support (e.g. Pretendard, Inter, Roboto)
 - Layout Grid: 8pt Grid, Fluid Responsive, Maximum Content Legibility
+- Multilingual Layout Support: Accommodate Korean (`ko`) and English (`en`) text variations (1.3x~1.5x length difference) without layout breaks
+- Top Navigation: Include a subtle, modern Language Switcher dropdown/toggle (KR / EN)
 Accessibility:
 - Strict WCAG AA compliance (4.5:1 minimum contrast ratio, touch targets >= 44px)
 ```
 
 ---
 
-## 2. Screen-by-Screen Stitch Generation Prompts
+## 2. Main Screen Generation Prompts
 
-### Screen 1: <SCREEN_NAME_1> (Ref: <REQ_ID_1>)
-* **Purpose**: <SCREEN_PURPOSE>
+### Main Screen 1: <MAIN_SCREEN_NAME_1> (Ref: <REQ_ID_1>)
+* **Role & Route**: Primary Landing / Dashboard (`<ROUTE_1>`)
 * **Stitch Generation Prompt**:
 ```text
-Create a responsive <SCREEN_NAME> screen for <PROJECT_NAME>.
-Key Components:
-1. <COMPONENT_1>: <SPECS>
-2. <COMPONENT_2>: <SPECS>
-3. <COMPONENT_3>: <SPECS>
+Create a modern, responsive <MAIN_SCREEN_NAME_1> screen for <PROJECT_NAME>.
+Screen Architecture & Layout:
+- Top Navigation / Header with brand logo, search bar, and user profile
+- Primary workspace grid / table displaying <KEY_DATA_ENTITIES>
+- Action Toolbar: CTA button "New <Entity>", Filter toggle, and Batch action buttons
 
-States to provide:
-- Default State with representative mock data
-- Empty State with guidance illustration and CTA button
-- Loading State with skeleton UI placeholders
-- Error State with inline retry mechanism
+Key Components:
+1. <COMPONENT_1>: <SPECS_AND_CONTROLS>
+2. <COMPONENT_2>: <SPECS_AND_DATA_DISPLAY>
+3. <COMPONENT_3>: <SPECS_AND_KPI_CARDS>
+
+States to generate:
+- Default State with realistic dummy data
+- Empty State with guided illustration and "Create First <Entity>" CTA
+- Loading State with skeleton placeholders
+- Error State with inline retry button
 ```
 
 ---
 
-### Screen 2: <SCREEN_NAME_2> (Ref: <REQ_ID_2>)
-* **Purpose**: <SCREEN_PURPOSE>
+## 3. Sub Screen, Modal & Drawer Generation Prompts
+
+### Sub Screen 1: <SUB_SCREEN_NAME_1> (Ref: <REQ_ID_2>)
+* **Role & Parent**: Detail View (Parent: `<MAIN_SCREEN_NAME_1>`)
 * **Stitch Generation Prompt**:
 ```text
-Create a responsive <SCREEN_NAME> screen for <PROJECT_NAME>.
-Key Components:
-1. <COMPONENT_1>: <SPECS>
-2. <COMPONENT_2>: <SPECS>
+Create a detail view screen for <ENTITY_NAME> in <PROJECT_NAME>.
+- Header with Breadcrumbs ("<MAIN_SCREEN_NAME_1> / <ENTITY_NAME>"), Title, and Status Badge
+- Tabbed layout: Overview, Details, Audit Logs, Settings
+- Actions: Edit, Delete, Export, and Back to List button
+```
 
-States to provide:
-- Default State
-- Loading & Error States
+### Modal 1: <MODAL_NAME_1> (Ref: <REQ_ID_3>)
+* **Role & Trigger**: Creation / Edit Dialog (Triggered from `<MAIN_SCREEN_NAME_1>` CTA button)
+* **Stitch Generation Prompt**:
+```text
+Create a focused modal dialog for creating a new <ENTITY_NAME>.
+- Centered overlay with backdrop blur
+- Form fields: <FIELD_1> (required input), <FIELD_2> (dropdown select), <FIELD_3> (toggle)
+- Validation hints and helper texts
+- Footer buttons: "Cancel" (ghost), "Create <Entity>" (primary solid)
 ```
 
 ---
 
-## 3. Stitch Output Import & Handoff Checklist
-Stitch Web Console에서 디자인 생성을 완료한 후:
-- [ ] 생성된 디자인의 Screen Layout 및 Color Token을 `docs/02-design/ui/UI_DESIGN_HANDOFF.md`에 복사/정리
-- [ ] Stitch 프로젝트 ID/URL을 `docs/02-design/ui/STITCH_PROJECT_REF.json`에 기록
-- [ ] G2 Design Baseline 검토 패키지에 등록
+## 4. Inter-Screen Workflow & Navigation Prompts
+
+Stitch 프로젝트 내 화면 간 상호작용 및 연결 흐름을 위한 프롬프트입니다:
+
+```text
+Inter-Screen Workflow & Navigation Instructions for <PROJECT_NAME>:
+1. Main Dashboard -> Sub Detail Screen:
+   - Clicking a table row or card in <MAIN_SCREEN_NAME_1> navigates to <SUB_SCREEN_NAME_1> with selected entity ID.
+   - Breadcrumb navigation on <SUB_SCREEN_NAME_1> allows returning directly to <MAIN_SCREEN_NAME_1>.
+2. Main Dashboard -> Create Modal:
+   - Clicking "+ New <Entity>" on <MAIN_SCREEN_NAME_1> opens <MODAL_NAME_1> as a foreground dialog.
+   - Submitting or canceling <MODAL_NAME_1> dismisses modal and refreshes <MAIN_SCREEN_NAME_1>.
+3. Filter & Search Workflow:
+   - Toggling filter on <MAIN_SCREEN_NAME_1> opens slide-over drawer and applies query parameters to the data view.
+```
+
+---
+
+## 5. Human Review, Refinement & Confirmation Protocol
+
+Stitch Web Console 또는 MCP를 통한 생성이 완료된 후 **인간 디자이너/엔지니어의 검토 및 수정이 완료될 때까지 에이전트는 대기**합니다:
+
+- [ ] Google Stitch 프로젝트를 열고 생성된 Main Screens, Sub Screens, Modal을 확인
+- [ ] 레이아웃 간격, 타이포그래피, 컬러 대비, 반응형 동작을 Stitch에서 직접 수정/보정
+- [ ] 화면 간 워크플로우(클릭 시 모달 오픈, 뒤로가기 링크 등) 연결성 검토
+- [ ] 수정이 완료되면 Antigravity 세션에 다음 명령을 입력하여 Handoff 동기화 및 G2 진행:
+  ```text
+  CONFIRM_STITCH_DESIGN_COMPLETED
+  ```

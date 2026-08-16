@@ -13,6 +13,13 @@ toolchain:
     selected_tool: TBD
     integration: mcp
     stitch_project_ref: ""
+i18n:
+  enabled: true
+  default_locale: "ko"
+  supported_locales: ["ko", "en"]
+  fallback_locale: "en"
+  charset: "UTF-8"
+  timezone: "UTC"
 phases:
   - id: "00-project-definition"
     handoff: "docs/00-project-definition/PROJECT_DEFINITION_HANDOFF.json"

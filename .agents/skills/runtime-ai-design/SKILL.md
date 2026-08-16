@@ -37,12 +37,12 @@ runtime_ai.enabled = true인 경우 사용한다.
 2. Model Input을 정의한다.
 3. Model Output을 정의한다.
 4. Structured Output 필요성을 정의한다.
-5. Prompt 역할을 정의한다.
-6. 사실성 요구를 정의한다.
+5. Prompt 역할을 정의한다 (한국어/영어 다국어 지시문 및 사용자 로케일 일치 응답 계약 포함).
+6. 사실성 요구 및 다국어 뉘앙스/용어 일관성을 정의한다.
 7. Hallucination 위험을 분석한다.
 8. 사람 확인이 필요한 결과를 정의한다.
-9. Fallback 동작을 설계한다.
-10. Evaluation Case를 작성한다.
+9. Fallback 동작을 설계한다 (로케일별 안전 안내 메시지).
+10. Evaluation Case를 작성한다 (한국어 및 영어 평가 프롬프트 포함).
 11. 실패/거부/Timeout 처리를 정의한다.
 12. Runtime Secret가 Client에 노출되지 않는지 검토한다.
 

@@ -10,11 +10,12 @@ Human review and explicit sign-off are strictly required prior to:
 1. **Phase Gate Transitions (G0 ~ G5)**: Approval of all `*_HANDOFF.json` artifacts.
 2. **Change Request Authorization**: Authorizing any change request via `APPROVE CR-XXXX` or `REJECT CR-XXXX: <reason>`.
 3. **UI Design Decision**: Approving UI tool adoption (`USE_STITCH`, `SKIP_STITCH`, `USE_OTHER_UI_TOOL: <tool>`) following UI Applicability Assessment.
-4. **Scope Alterations**: Any addition, removal, or revision of functional scope in `SCOPE.md`.
-5. **Architectural Decisions**: Creation or modification of Architecture Decision Records (ADRs) under `docs/02-design/adr/`.
-6. **Security Policy Exemptions**: Introduction of new external integrations, auth flow changes, or security exceptions.
-7. **Data Model Breaking Changes**: Destructive schema alterations or data migrations.
-8. **Production Deployments**: Authorizing any release execution to staging or production environments.
+4. **Stitch UI Design Refinement**: Confirming completion of human review and adjustments on Stitch-generated designs (`CONFIRM_STITCH_DESIGN_COMPLETED`) prior to G2 Design Baseline approval.
+5. **Scope Alterations**: Any addition, removal, or revision of functional scope in `SCOPE.md`.
+6. **Architectural Decisions**: Creation or modification of Architecture Decision Records (ADRs) under `docs/02-design/adr/`.
+7. **Security Policy Exemptions**: Introduction of new external integrations, auth flow changes, or security exceptions.
+8. **Data Model Breaking Changes**: Destructive schema alterations or data migrations.
+9. **Production Deployments**: Authorizing any release execution to staging or production environments.
 
 ### 2.2 Gate Decision Commands
 - Gate Approvals:
@@ -28,6 +29,9 @@ Human review and explicit sign-off are strictly required prior to:
   - `USE_STITCH`
   - `SKIP_STITCH`
   - `USE_OTHER_UI_TOOL: <tool>`
+- Stitch Design Completion Confirmation:
+  - `CONFIRM_STITCH_DESIGN_COMPLETED`
+  - `CONFIRM_STITCH_DESIGN_COMPLETED: <project_id_or_url>`
 
 ### 2.3 Non-Auto-Execution (Stop on Gate)
 - Receiving a human approval or decision **never** automatically triggers the next stage or workflow. The agent must report the status and recommend the next command for human invocation.

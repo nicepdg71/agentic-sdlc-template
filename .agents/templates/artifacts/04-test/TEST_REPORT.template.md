@@ -33,8 +33,17 @@ approval_gate: "G4"
 |---|---|---|---|
 | TC-001 | AC-FR001-01 | | |
 
+## 4. Multilingual (i18n) Verification Results
 
-## 4. Failed Tests
+| Locale | Check Item | Result | Notes / Truncation Check |
+|---|---|---|---|
+| `ko` (Korean) | Hangul UI Rendering & Font Clarity | PASS / FAIL | CJK typography & word break |
+| `ko` (Korean) | UTF-8 / NFC Input & DB Persistence | PASS / FAIL | No mojibake / encoding corruption |
+| `en` (English) | English UI Rendering & Fallback | PASS / FAIL | String expansion tolerance |
+| `en` (English) | `Accept-Language` API Error Responses | PASS / FAIL | Localized error message payload |
+| Dynamic | Real-time Language Switcher Flow | PASS / FAIL | State persistence across refresh |
+
+## 5. Failed Tests
 
 -
 

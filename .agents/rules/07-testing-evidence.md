@@ -22,3 +22,7 @@ Mandate empirical, automated verification for all code changes so that quality, 
 ### 2.4 Regression & Flaky Test Prevention
 - Tests must be deterministic, self-contained, and idempotent.
 - Flaky or environment-dependent tests must be resolved immediately before code merge.
+
+### 2.5 Multilingual (Korean & English) Test Evidence
+- Automated test suites must include test cases verifying both Korean (`ko`) and English (`en`) inputs, outputs, and locale switches.
+- String encoding, Hangul Unicode normalization (NFC/NFD), special characters, and UI layout truncation/clipping tests under both languages must be evidenced in `docs/04-test/TEST_REPORT.md`.

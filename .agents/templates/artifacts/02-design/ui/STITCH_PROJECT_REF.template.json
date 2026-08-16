@@ -4,6 +4,21 @@
   "project_name": "<STITCH_PROJECT_NAME>",
   "project_id": "<STITCH_PROJECT_ID>",
   "design_status": "APPROVED",
+  "human_review_status": "COMPLETED",
+  "confirmed_by": "<HUMAN_REVIEWER_ID>",
+  "confirmed_at": "<ISO8601_TIMESTAMP>",
+  "main_screens": [
+    "<MAIN_SCREEN_1>",
+    "<MAIN_SCREEN_2>"
+  ],
+  "sub_screens": [
+    "<SUB_SCREEN_1>",
+    "<MODAL_1>"
+  ],
+  "workflows_defined": [
+    "<WORKFLOW_MAIN_TO_DETAIL>",
+    "<WORKFLOW_MAIN_TO_CREATE_MODAL>"
+  ],
   "related_requirements": [
     "<REQ_001>",
     "<REQ_002>"

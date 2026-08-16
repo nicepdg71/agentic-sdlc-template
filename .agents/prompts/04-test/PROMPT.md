@@ -84,19 +84,26 @@ API/Event Contract를 검증한다.
 
 잘못된 입력과 실패상황을 검증한다.
 
-### 9. Security Review
+### 9. Multilingual (i18n) Verification
+
+한국어(`ko`) 및 영어(`en`) 로케일 환경에서 다음을 검증한다:
+- 언어 전환 및 다국어 텍스트/메시지 정상 표시
+- 한글 유니코드 정규화(NFC/NFD) 및 특수문자 입출력 무결성
+- 다국어 전환 시 UI 텍스트 오버플로우/말줄임 및 레이아웃 유지
+
+### 10. Security Review
 
 @security 관점의 검증을 수행한다.
 
-### 10. Regression
+### 11. Regression
 
 기존 기능 영향 여부를 검증한다.
 
-### 11. Coverage
+### 12. Coverage
 
 Requirement → AC → Test Case → Result를 연결한다.
 
-### 12. Defect
+### 13. Defect
 
 미해결 문제를 기록한다.
 

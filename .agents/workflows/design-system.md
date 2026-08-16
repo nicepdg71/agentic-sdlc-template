@@ -82,56 +82,58 @@ DESIGN 시작 시 UI/UX 설계 필요성을 평가한다:
    ```
    *Human Decision 전에는 UI Tool Integration을 실행하지 않는다.*
 
-4. **Stitch Integration 절차 (Human 선택이 USE_STITCH인 경우)**:
-   - `project.yaml`의 `toolchain.ui_design.enabled = true`, `selected_tool = stitch`로 설정.
-   - Stitch MCP 연결 상태를 확인하고 다음 두 가지 모드 중 하나로 동작한다:
+ 4. **Stitch Integration 절차 (Human 선택이 USE_STITCH인 경우)**:
+    - `project.yaml`의 `toolchain.ui_design.enabled = true`, `selected_tool = stitch`로 설정.
+    - Stitch 연동은 **4-Phase 생명주기**를 따르며, Stitch 생성 완료 후 사람의 수정/검토 완료(`CONFIRM_STITCH_DESIGN_COMPLETED`) 전까지 **다음 단계를 진행하지 않고 블로킹**된다:
 
-   ---
+    ---
 
-   ### 🅰️ Mode 1: MCP 실시간 자동 연동 모드 (Live MCP Mode)
-   * **조건**: `.agents/mcp_config.json` 또는 Antigravity IDE에 Stitch MCP 서버가 등록되어 통신 가능한 경우
-   * **동작**:
-     1. Requirement 기반으로 `docs/02-design/ui/UI_DESIGN_BRIEF.md` 생성.
-     2. Stitch MCP 툴을 직접 호출하여 화면 레이아웃, 컬러/타이포그래피 토큰, 컴포넌트 메타데이터를 실시간 조회·동기화.
-     3. 동기화된 정보를 바탕으로 `docs/02-design/ui/UI_DESIGN_HANDOFF.md` 및 `docs/02-design/ui/STITCH_PROJECT_REF.json` 생성.
+    ### 🅰️ Step 4.1: UI 사양 및 화면 워크플로우 정의 (Phase 1)
+    - Requirement 및 User Story 기반으로 `docs/02-design/ui/UI_DESIGN_BRIEF.md` 생성:
+      - **Main Screens**: 대시보드, 메인 리스트/워크스페이스 등 핵심 1차 진입 화면.
+      - **Sub Screens & Modals**: 상세 뷰, 생성/수정 모달, 검색/필터 드로어, 확인 다이얼로그 등 2차 화면.
+      - **Screen Workflow & Transition Map**: 화면 간 전이 트리거 이벤트, 데이터/파라미터 전달, 복귀/뒤로가기 흐름, Mermaid 플로우차트.
 
-   ---
+    ---
 
-   ### 🅱️ Mode 2: 프롬프트 생성 모드 (Fallback Prompt Mode / Web UI 연계)
-   * **조건**: Stitch MCP 서버가 미등록/미연결 상태인 경우
-   * **동작**:
-     1. **설정 안내 출력**: 사용자에게 Stitch MCP 미연결 상태임을 알리고 설정 가이드를 제공한다:
-        ```text
-        STITCH MCP SETUP REQUIRED (Fallback Mode Activated)
+    ### 🅱️ Step 4.2: Stitch 디자인 요청 전달 (Phase 2 - Live MCP or Fallback Prompt)
+    * **Mode 1 (Live MCP Mode)**:
+      - `.agents/mcp_config.json`의 Stitch MCP 도구를 호출하여 Main/Sub 화면 목록과 화면 간 워크플로우를 일괄 전달하고 자동 생성 실행.
+    * **Mode 2 (Fallback Prompt Mode)**:
+      - Stitch MCP 미연결 시 `STITCH MCP SETUP REQUIRED` 출력 및 가이드 제공.
+      - `docs/02-design/ui/STITCH_PROMPTS.md`에 Global Context, Main Screens, Sub Screens, Screen Workflow Prompts를 자동 생성.
 
-        Reason: Stitch MCP server is not configured in .agents/mcp_config.json.
+    ---
 
-        [Stitch MCP 연동 방법]
-        방법 1: .agents/mcp_config.json에 Stitch MCP 추가 (Remote SSE 방식 권장)
-        {
-          "mcpServers": {
-            "stitch": {
-              "serverUrl": "https://stitch.googleapis.com/mcp",
-              "headers": {
-                "X-Goog-Api-Key": "<YOUR_GOOGLE_STITCH_API_KEY>"
-              }
-            }
-          }
-        }
-        (또는 Stdio npx 방식: "command": "npx", "args": ["-y", "@google/stitch-mcp-server"])
+    ### 🆎 Step 4.3: 인간 검토/수정 대기 블로킹 게이트 (Phase 3 - Mandatory Blocking Stop)
+    - Stitch에서 디자인 작성이 완료된 후, 에이전트는 **절대 다음 단계를 임의로 진행하지 않고 즉시 실행을 중단**한다.
+    - 에이전트는 다음 메시지를 출력하고 대기한다:
+      ```text
+      STITCH UI DESIGN REVIEW & REFINEMENT REQUIRED
+      Project: <PROJECT_NAME_OR_ID>
 
-        방법 2: Antigravity IDE 전역 MCP 설정에 Stitch 서버 등록
-        ```
-     2. **프롬프트 산출물 자동 생성**:
-        `.agents/templates/artifacts/02-design/ui/STITCH_PROMPTS.template.md`를 기반으로 `docs/02-design/ui/STITCH_PROMPTS.md`를 자동 생성한다. 사용자는 이 프롬프트를 Google Stitch Web Console에 입력하여 디자인을 생성할 수 있다.
-     3. **UI 산출물 초안 생성**:
-        `docs/02-design/ui/UI_DESIGN_BRIEF.md`, `docs/02-design/ui/UI_DESIGN_HANDOFF.md`, `docs/02-design/ui/STITCH_PROJECT_REF.json` 초안을 작성한다.
-     4. **Fail-Closed 안전 원칙**:
-        Non-UI 아키텍처 설계는 계속 진행할 수 있으나, UI 산출물(`UI_DESIGN_HANDOFF.md` 등)이 검토/확정되기 전에는 G2 승인을 완료할 수 없다.
+      Stitch has completed automated generation for Main/Sub screens and screen workflows.
+      Human review and adjustments are required in Google Stitch.
 
-   ---
+      Actions for Human:
+      1. Open Google Stitch (Project: <PROJECT_ID_OR_NAME>).
+      2. Review and adjust layouts, components, responsive styles, and screen transitions.
+      3. When your review and modifications in Stitch are complete, execute:
+         CONFIRM_STITCH_DESIGN_COMPLETED
+      ```
 
-   *보안 원칙: Secret/API Key는 절대 코드나 문서 저장소에 기록하지 않는다.*
+    ---
+
+    ### 🅾️ Step 4.4: 완료 확인 및 Handoff 최종 동기화 (Phase 4)
+    - 인간으로부터 `CONFIRM_STITCH_DESIGN_COMPLETED` 명령을 수령한 후:
+      1. Stitch의 최종 디자인(토큰, 레이아웃, 컴포넌트, 화면 흐름)을 `docs/02-design/ui/UI_DESIGN_HANDOFF.md`에 최종 동기화.
+      2. `docs/02-design/ui/STITCH_PROJECT_REF.json`의 `human_review_status`를 `COMPLETED`로 업데이트하고 `confirmed_by`, `confirmed_at` 기록.
+      3. G2 심사 패키지 준비로 전환.
+
+    ---
+
+    *Fail-Closed 원칙: UI 산출물(`UI_DESIGN_HANDOFF.md`, `STITCH_PROJECT_REF.json`)이 인간 검토 완료 및 확정되기 전에는 G2 승인을 완료할 수 없다.*
+    *보안 원칙: Secret/API Key는 절대 코드나 문서 저장소에 기록하지 않는다.*
 
 ## Execution
 
